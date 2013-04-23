@@ -81,9 +81,10 @@
 
         #endregion
 
-        public static System.Windows.Forms.CheckBox chkMovement;
-        public static System.Windows.Forms.CheckBox chkFacing;
-        public static System.Windows.Forms.CheckBox chkTargeting;
+        private System.Windows.Forms.CheckBox chkMovement;
+        private System.Windows.Forms.CheckBox chkFacing;
+        private System.Windows.Forms.CheckBox chkTargeting;
+
 
     }
 }

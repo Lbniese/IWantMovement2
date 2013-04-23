@@ -29,7 +29,9 @@ namespace IWantMovement
         Targeting _thisTargetMethod;
 
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
-        public static readonly GUI ConfigForm = new GUI();
+        //public static GUI ConfigForm = new GUI();
+        private static string SvnRevision { get { return "$Rev: 1 $"; } }
+
         
 
         #region Default Overrides
@@ -38,7 +40,6 @@ namespace IWantMovement
         public override string Name { get { return "I Want Movement"; }}
         public override bool WantButton { get { return true; }}
         public override Version Version { get { return new Version(1,0, Convert.ToInt32(SvnRevision)); }}
-        private static string SvnRevision { get { return "$Rev: 1 $"; }}
         #endregion Default Overrides
 
         public override void OnButtonPress()
@@ -74,7 +75,7 @@ namespace IWantMovement
             }
             */
 
-            if (ConfigForm.EnableFacing)
+            if (true/*ConfigForm.EnableFacing*/)
             {
                 if (Me.CurrentTarget != null && !Me.IsSafelyFacing(Me.CurrentTarget))
                 {
