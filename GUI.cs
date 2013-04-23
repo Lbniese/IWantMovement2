@@ -19,7 +19,11 @@ namespace IWantMovement
 
         private void GUI_Load(object sender, EventArgs e)
         {
-
+            
         }
+
+        public bool EnableMovement { get { return chkMovement.Checked; } }
+        public bool EnableFacing { get { return chkFacing.Checked; } }
+        public bool EnableTargeting { get { return chkTargeting.Checked; } }
     }
 }

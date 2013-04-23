@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using Styx;
 using Styx.Common;
 using Styx.CommonBot;
+using Styx.Helpers;
 using Styx.Plugins;
 using System.Windows.Media;
 using Styx.WoWInternals.WoWObjects;
@@ -28,10 +29,8 @@ namespace IWantMovement
         Targeting _thisTargetMethod;
 
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
-
-        public static bool EnableMovement { get { return GUI.chkMovement.Checked; } }
-        public static bool EnableFacing { get { return GUI.chkFacing.Checked; } }
-        public static bool EnableTargeting { get { return GUI.chkTargeting.Checked; } }
+        public static readonly GUI ConfigForm = new GUI();
+        
 
         #region Default Overrides
         public override string Author { get { return "Millz"; }}
@@ -52,6 +51,7 @@ namespace IWantMovement
         {
             _previousTargetMethod = Targeting.Instance;
             _thisTargetMethod = new Target();
+          
             Log("IWantMovement Initialized");
             base.Initialize();
         }
@@ -66,7 +66,7 @@ namespace IWantMovement
         public override void Pulse()
         {
             /*
-            if ((_thisTargetMethod != Targeting.Instance) && EnableTargeting)
+            if ((_thisTargetMethod != Targeting.Instance) && ConfigForm.EnableTargeting)
             {
                 _thisTargetMethod = new Target();
                 Targeting.Instance = _thisTargetMethod;
@@ -74,7 +74,7 @@ namespace IWantMovement
             }
             */
 
-            if (EnableFacing)
+            if (ConfigForm.EnableFacing)
             {
                 if (Me.CurrentTarget != null && !Me.IsSafelyFacing(Me.CurrentTarget))
                 {
@@ -83,7 +83,7 @@ namespace IWantMovement
                 }
             }
             /*
-            if (EnableMovement)
+            if (ConfigForm.EnableMovement)
             {
                 
             }
