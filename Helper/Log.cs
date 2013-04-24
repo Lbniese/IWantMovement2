@@ -8,8 +8,20 @@ namespace IWantMovement.Helper
 
         public static void Info(string logText, params object[] args)
         {
-            Logging.Write(LogLevel.Normal, Colors.LawnGreen, string.Format("[IWM]: {0} {1}", logText), args);
+            if (logText == null) return;
+            Logging.Write(LogLevel.Normal, Colors.LawnGreen, "[IWM]: {0}", string.Format(logText, args));
         }
 
+        public static void Warning(string logText, params object[] args)
+        {
+            if (logText == null) return;
+            Logging.Write(LogLevel.Normal, Colors.Fuchsia, "[IWM]: {0}", string.Format(logText, args));
+        }
+
+        public static void Debug(string logText, params object[] args)
+        {
+            if (logText == null) return;
+            Logging.Write(LogLevel.Diagnostic, Colors.DodgerBlue, "[IWM]: {0}", string.Format(logText, args));
+        }
     }
 }
