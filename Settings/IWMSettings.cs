@@ -42,26 +42,57 @@ namespace IWantMovement.Settings
             }
         }
 
+        #region Movement
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("General")]
-        [DisplayName("Movement")]
+        [Category("Movement")]
+        [DisplayName("Enable Movement")]
         [Description("Allow IWM to handle movement")]
         public bool EnableMovement { get; set; }
 
         [Setting]
-        [Styx.Helpers.DefaultValue(false)]
-        [Category("General")]
-        [DisplayName("Facing")]
-        [Description("Allow IWM to handle facing target")]
-        public bool EnableFacing { get; set; }
+        [Styx.Helpers.DefaultValue(35)]
+        [Category("Movement")]
+        [DisplayName("Max Distance")]
+        [Description("Maximum distance we should be away from target before starting to move closer.")]
+        public int MaxDistance { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(25)]
+        [Category("Movement")]
+        [DisplayName("Min Distance")]
+        [Description("Minimum distance the target should be away before from us, and for us to stop moving.")]
+        public int MinDistance { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("General")]
-        [DisplayName("Targeting")]
+        [Category("Movement")]
+        [DisplayName("Move Behind Target")]
+        [Description("Attempt to move behind the target (i.e. for melee classes)")]
+        public bool MoveBehindTarget { get; set; }
+
+        #endregion Movement
+
+        #region Facing
+        [Setting]
+        [Styx.Helpers.DefaultValue(false)]
+        [Category("Facing")]
+        [DisplayName("Enable Facing")]
+        [Description("Allow IWM to handle facing target")]
+        public bool EnableFacing { get; set; }
+
+
+        #endregion Facing
+
+        #region Targeting
+        [Setting]
+        [Styx.Helpers.DefaultValue(false)]
+        [Category("Targeting")]
+        [DisplayName("Enable Targeting")]
         [Description("Allow IWM to handle targeting")]
         public bool EnableTargeting { get; set; }
 
+
+        #endregion
     }
 }

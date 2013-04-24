@@ -32,6 +32,7 @@ namespace IWantMovement.Settings
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             IWMSettings.Instance.Save();
+            Managers.Movement.ValidatedSettings = false;
         }
 
         private void pgSettings_Click(object sender, EventArgs e)

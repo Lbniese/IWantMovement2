@@ -11,7 +11,10 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Forms;
+using IWantMovement.Managers;
 using Styx;
 using Styx.CommonBot;
 using Styx.Plugins;
@@ -27,8 +30,7 @@ namespace IWantMovement
         Targeting _previousTargetMethod;
         Targeting _thisTargetMethod;
 
-        public static LocalPlayer Me { get { return StyxWoW.Me; } }
-        //public static GUI ConfigForm = new GUI();
+        internal static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
 
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
@@ -53,7 +55,8 @@ namespace IWantMovement
             _thisTargetMethod = new Target();
 
             Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-            Log.Info("Designed to be used with PureRotation (http://tinyurl.com/purev2)");
+            Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
+            Log.Info("~ Millz");
             
             base.Initialize();
         }
@@ -67,26 +70,32 @@ namespace IWantMovement
 
         public override void Pulse()
         {
-            /*
+            
             if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting)
             {
-                _thisTargetMethod = new Target();
+                // we don't have control, let's take it.
+                Log.Warning("Taking control of targeting. If this message is being spammed, something else is trying to take control.");
                 Targeting.Instance = _thisTargetMethod;
-                Log("Setting IWantMovement to control targeting.");
             }
-            */
 
-            if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.IsSafelyFacing(Me.CurrentTarget))
+            if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget)
+            {
+                // we've got control.
+                Target.AquireTarget();
+            }
+            
+
+            if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget))
             {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
             }
-            /*
+            
             if (Settings.EnableMovement)
             {
-                
+                Movement.Move();
             }
-            */
+            
         }
 
     }
