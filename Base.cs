@@ -2,7 +2,7 @@
 /*
  * $Author$
  * $Date$
- * $ID$
+ * $ID: $
  * $Revision$
  * $URL$
  * $LastChangedBy$

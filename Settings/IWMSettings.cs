@@ -1,4 +1,16 @@
-﻿using System.ComponentModel;
+﻿#region Revision info
+/*
+ * $Author$
+ * $Date$
+ * $ID: $
+ * $Revision$
+ * $URL$
+ * $LastChangedBy$
+ * $ChangesMade: $
+ */
+#endregion
+
+using System.ComponentModel;
 using Styx;
 using Styx.Common;
 using Styx.Helpers;

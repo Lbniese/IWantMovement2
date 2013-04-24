@@ -60,7 +60,6 @@
   <ItemGroup>
     <Compile Include="Base.cs" />
     <Compile Include="Helper\Log.cs" />
-    <Compile Include="Managers\Facing.cs" />
     <Compile Include="Settings\GUI.cs">
       <SubType>Form</SubType>
     </Compile>

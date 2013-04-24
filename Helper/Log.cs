@@ -1,4 +1,16 @@
-﻿using System.Windows.Media;
+﻿#region Revision info
+/*
+ * $Author$
+ * $Date$
+ * $ID: $
+ * $Revision$
+ * $URL$
+ * $LastChangedBy$
+ * $ChangesMade: $
+ */
+#endregion
+
+using System.Windows.Media;
 using Styx.Common;
 
 namespace IWantMovement.Helper

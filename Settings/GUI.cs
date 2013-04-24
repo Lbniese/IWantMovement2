@@ -1,4 +1,16 @@
-﻿using System;
+﻿#region Revision info
+/*
+ * $Author$
+ * $Date$
+ * $ID: $
+ * $Revision$
+ * $URL$
+ * $LastChangedBy$
+ * $ChangesMade: $
+ */
+#endregion
+
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
