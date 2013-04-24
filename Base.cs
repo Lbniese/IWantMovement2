@@ -13,11 +13,8 @@
 using System;
 using System.Windows.Forms;
 using Styx;
-using Styx.Common;
 using Styx.CommonBot;
-using Styx.Helpers;
 using Styx.Plugins;
-using System.Windows.Media;
 using Styx.WoWInternals.WoWObjects;
 using IWantMovement.Helper;
 
@@ -53,15 +50,15 @@ namespace IWantMovement
         {
             _previousTargetMethod = Targeting.Instance;
             _thisTargetMethod = new Target();
-          
-            Log("IWantMovement Initialized");
+
+            Log.Info("IWantMovement Initialized");
             base.Initialize();
         }
 
         public override void Dispose()
         {
             Targeting.Instance = _previousTargetMethod;
-            Log("Disabling IWantMovement");
+            Log.Info("Disabling IWantMovement");
             base.Dispose();
         }
 
