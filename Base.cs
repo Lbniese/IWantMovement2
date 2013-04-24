@@ -19,6 +19,7 @@ using Styx.Helpers;
 using Styx.Plugins;
 using System.Windows.Media;
 using Styx.WoWInternals.WoWObjects;
+using IWantMovement.Helper;
 
 namespace IWantMovement
 {
@@ -32,7 +33,7 @@ namespace IWantMovement
         //public static GUI ConfigForm = new GUI();
         private static string SvnRevision { get { return "$Rev: 1 $"; } }
 
-        
+        private static Settings.IWMSettings Settings { get { return Settings; } }
 
         #region Default Overrides
         public override string Author { get { return "Millz"; }}
@@ -75,11 +76,11 @@ namespace IWantMovement
             }
             */
 
-            if (true/*ConfigForm.EnableFacing*/)
+            if (Settings.EnableFacing)
             {
                 if (Me.CurrentTarget != null && !Me.IsSafelyFacing(Me.CurrentTarget))
                 {
-                    Log("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
+                    Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
                 }
             }
@@ -89,11 +90,6 @@ namespace IWantMovement
                 
             }
             */
-        }
-
-        public static void Log(string logText, params object[] args)
-        {
-            Logging.Write(LogLevel.Normal, Colors.LawnGreen, string.Format("[IWM]: {0} {1}", logText), args);
         }
 
     }
