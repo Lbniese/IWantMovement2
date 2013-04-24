@@ -26,8 +26,15 @@ namespace IWantMovement.Managers
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
         private readonly static Map Map = Me.CurrentMap;
 
+        public static bool WantTarget()
+        {
+            return !Me.GotTarget && Me.CurrentTarget == null && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
+        }
+
         public static void AquireTarget()
         {
+            if (!WantTarget()) return;
+            
             WoWUnit unit;
             if (Map.IsBattleground || Map.IsArena)
             {

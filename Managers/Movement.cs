@@ -84,12 +84,14 @@ namespace IWantMovement.Managers
             // Check if we need to move
             if (!MoveBehindTarget && NeedToMove() && CanMove())
             {
+                Log.Info("Moving to current target at {0}", Me.CurrentTarget.Location);
                 Navigator.MoveTo(Me.CurrentTarget.Location);
             }
 
             // Check if need to move, and want to be behind our target.
             if (MoveBehindTarget && NeedToMove() && CanMove())
             {
+                Log.Info("Moving behind target at {0}", Me.CurrentTarget.Location);
                 Navigator.MoveTo(PointBehindTarget());
             }
         }
