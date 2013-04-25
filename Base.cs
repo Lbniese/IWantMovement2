@@ -11,8 +11,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows.Forms;
 using IWantMovement.Managers;
 using Styx;
@@ -24,7 +22,9 @@ using IWantMovement.Settings;
 
 namespace IWantMovement
 {
+// ReSharper disable InconsistentNaming
     internal class IWantMovement : HBPlugin
+// ReSharper restore InconsistentNaming
     {
         private Form _gui;
         Targeting _previousTargetMethod;
