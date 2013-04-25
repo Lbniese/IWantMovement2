@@ -30,10 +30,11 @@ namespace IWantMovement.Managers
         private static int MinDistance { get { return Settings.IWMSettings.Instance.MinDistance; } }
         public static bool ValidatedSettings = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
+        private static DateTime _movementLast;
 
         public static bool CanMove()
         {
-            return !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
+            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime)) && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
         }
 
         public static void ValidateSettings()
@@ -85,6 +86,7 @@ namespace IWantMovement.Managers
             if (!MoveBehindTarget && NeedToMove() && CanMove())
             {
                 Log.Info("Moving to current target at {0}", Me.CurrentTarget.Location);
+                _movementLast = DateTime.UtcNow;
                 Navigator.MoveTo(Me.CurrentTarget.Location);
             }
 
@@ -92,6 +94,7 @@ namespace IWantMovement.Managers
             if (MoveBehindTarget && NeedToMove() && CanMove())
             {
                 Log.Info("Moving behind target at {0}", Me.CurrentTarget.Location);
+                _movementLast = DateTime.UtcNow;
                 Navigator.MoveTo(PointBehindTarget());
             }
         }

@@ -71,6 +71,13 @@ namespace IWantMovement.Settings
         [Description("Attempt to move behind the target (i.e. for melee classes)")]
         public bool MoveBehindTarget { get; set; }
 
+        [Setting]
+        [Styx.Helpers.DefaultValue(1000)]
+        [Category("Movement")]
+        [DisplayName("Throttle Time")]
+        [Description("Duration in milliseconds to wait between re-attempting action.")]
+        public int MovementThrottleTime { get; set; }
+
         #endregion Movement
 
         #region Facing
@@ -81,6 +88,12 @@ namespace IWantMovement.Settings
         [Description("Allow IWM to handle facing target")]
         public bool EnableFacing { get; set; }
 
+        [Setting]
+        [Styx.Helpers.DefaultValue(1000)]
+        [Category("Facing")]
+        [DisplayName("Throttle Time")]
+        [Description("Duration in milliseconds to wait between re-attempting action.")]
+        public int FacingThrottleTime { get; set; }
 
         #endregion Facing
 
@@ -92,7 +105,12 @@ namespace IWantMovement.Settings
         [Description("Allow IWM to handle targeting")]
         public bool EnableTargeting { get; set; }
 
-
+        [Setting]
+        [Styx.Helpers.DefaultValue(5000)]
+        [Category("Targeting")]
+        [DisplayName("Throttle Time")]
+        [Description("Duration in milliseconds to wait between re-attempting action.")]
+        public int TargetingThrottleTime { get; set; }
         #endregion
     }
 }

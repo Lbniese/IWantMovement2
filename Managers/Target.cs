@@ -10,6 +10,7 @@
  */
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using IWantMovement.Helper;
@@ -25,10 +26,11 @@ namespace IWantMovement.Managers
     {
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
         private readonly static Map Map = Me.CurrentMap;
+        private static DateTime _targetLast;
 
         public static bool WantTarget()
         {
-            return !Me.GotTarget && Me.CurrentTarget == null && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
+            return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime)) && !Me.GotTarget && Me.CurrentTarget == null && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
         }
 
         public static void AquireTarget()
@@ -36,6 +38,7 @@ namespace IWantMovement.Managers
             if (!WantTarget()) return;
             
             WoWUnit unit;
+            _targetLast = DateTime.UtcNow;
             if (Map.IsBattleground || Map.IsArena)
             {
                 

@@ -32,8 +32,8 @@ namespace IWantMovement
 
         internal static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
-
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
+        private DateTime _facingLast;
 
         #region Default Overrides
         public override string Author { get { return "Millz"; }}
@@ -83,12 +83,13 @@ namespace IWantMovement
                 // we've got control.
                 Target.AquireTarget();
             }
-            
 
-            if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 45)
+
+            if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
             {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
+                _facingLast = DateTime.UtcNow;
             }
             
             if (Settings.EnableMovement)
