@@ -112,5 +112,21 @@ namespace IWantMovement.Settings
         [Description("Duration in milliseconds to wait between re-attempting action.")]
         public int TargetingThrottleTime { get; set; }
         #endregion
+
+        #region Pull Behavior
+        [Setting]
+        [Styx.Helpers.DefaultValue("Auto Attack")]
+        [Category("Pull Behavior")]
+        [DisplayName("Spell Name")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellName { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(true)]
+        [Category("Pull Behavior")]
+        [DisplayName("Force Combat")]
+        [Description("Will cast the spell defined under setting 'Spell Name' to get us in combat.")]
+        public bool ForceCombat { get; set; }
+        #endregion
     }
 }

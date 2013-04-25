@@ -15,6 +15,7 @@ using System.Windows.Forms;
 using IWantMovement.Managers;
 using Styx;
 using Styx.CommonBot;
+using Styx.CommonBot.POI;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
 using IWantMovement.Helper;
@@ -84,7 +85,6 @@ namespace IWantMovement
                 Target.AquireTarget();
             }
 
-
             if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
             {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
@@ -96,8 +96,19 @@ namespace IWantMovement
             {
                 Movement.Move();
             }
+
+            GetInCombat();
             
         }
 
+        public static void GetInCombat()
+        {
+            if (Settings.ForceCombat && Settings.PullSpellName != "" && !Me.IsActuallyInCombat && Me.GotTarget && Me.CurrentTarget == BotPoi.Current.AsObject && Me.CurrentTarget.IsHostile && SpellManager.CanCast(Settings.PullSpellName, Me.CurrentTarget, true))
+            {
+                Log.Info("[Casting: {0}] [Target: {1}] [Target HP: {2}] [Target Distance: {3}]", Settings.PullSpellName, Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
+                SpellManager.Cast(Settings.PullSpellName);
+            }
+
+        }
     }
 }
