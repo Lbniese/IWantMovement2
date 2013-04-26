@@ -10,9 +10,11 @@
  */
 #endregion
 
+using System;
 using CommonBehaviors.Actions;
 using IWantMovement.Helper;
 using Styx;
+using Styx.Common;
 using Styx.CommonBot;
 using Styx.CommonBot.Routines;
 using Styx.TreeSharp;
@@ -20,15 +22,31 @@ using Action = Styx.TreeSharp.Action;
 
 namespace IWantMovement.Managers
 {
-    class IWantMovement : CombatRoutine
+// ReSharper disable InconsistentNaming
+    public class IWantMovement : CombatRoutine
+// ReSharper restore InconsistentNaming
     {
-        //internal static readonly Version Version = new Version(0, 0, 1);
+        internal static readonly Version Version = new Version(0, 0, 1);
         //internal static bool EnablePullSpells = true;
 
         public override string Name { get { return "I Want Movement"; } }
         public override WoWClass Class { get { return StyxWoW.Me.Class; } }
 
         public override Composite PullBehavior { get { return CreatePullBehavior; } }
+        public static Composite PullBehaviorHook = CreatePullBehavior;
+
+        public override void Initialize()
+        {
+            
+            //TreeHooks.Instance.AddHook("Combat_Pull", PullBehaviorHook);
+        }
+
+        /*
+        public Dispose()
+        {
+            TreeHooks.Instance.RemoveHook("Combat_Pull", PullBehaviorHook);
+        }
+        */
 
         public static Composite CreatePullBehavior
         {
@@ -37,7 +55,7 @@ namespace IWantMovement.Managers
 
                 Log.Debug("CreatePullBehavior Called");
                 if (!Settings.IWMSettings.Instance.ForceCombat)
-                    return new ActionAlwaysFail();
+                    return new ActionAlwaysSucceed();
 
                 var prio = new PrioritySelector();
                 switch (StyxWoW.Me.Class)

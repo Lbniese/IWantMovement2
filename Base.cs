@@ -12,12 +12,13 @@
 
 using System;
 using System.Windows.Forms;
-using IWantMovement.Managers;
 using Styx;
+using Styx.Common;
 using Styx.CommonBot;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
 using IWantMovement.Helper;
+using IWantMovement.Managers;
 using IWantMovement.Settings;
 
 namespace IWantMovement
@@ -54,9 +55,12 @@ namespace IWantMovement
         {
             if (!_initialized) // prevent init twice.
             {
-
+                Log.Info("Storing current targeting instance.");
                 _previousTargetMethod = Targeting.Instance;
+                Log.Info("Creating our targeting instance.");
                 _thisTargetMethod = new Target();
+                Log.Info("Adding combat routine hook to pull behavior.");
+                TreeHooks.Instance.AddHook("Combat_Pull", Managers.IWantMovement.PullBehaviorHook);
 
                 Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
                 Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
@@ -70,6 +74,7 @@ namespace IWantMovement
         public override void Dispose()
         {
             Targeting.Instance = _previousTargetMethod;
+            TreeHooks.Instance.RemoveHook("Combat_Pull", Managers.IWantMovement.PullBehaviorHook);
             Log.Info("Disabling IWantMovement");
             base.Dispose();
         }

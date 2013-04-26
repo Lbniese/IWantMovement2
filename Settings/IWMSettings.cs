@@ -127,7 +127,7 @@ namespace IWantMovement.Settings
         [Styx.Helpers.DefaultValue(true)]
         [Category("Pull Behavior")]
         [DisplayName("Force Combat")]
-        [Description("Will cast the spell defined under setting 'Spell Name' to get us in combat.")]
+        [Description("Will override the combat routines pull behavior.")]
         public bool ForceCombat { get; set; }
         #endregion
     }
