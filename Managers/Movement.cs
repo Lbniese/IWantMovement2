@@ -30,11 +30,17 @@ namespace IWantMovement.Managers
         private static int MinDistance { get { return Settings.IWMSettings.Instance.MinDistance; } }
         public static bool ValidatedSettings = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
-        private static DateTime _movementLast;
+        public static DateTime _movementLast;
 
         public static bool CanMove()
         {
-            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime)) && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
+            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime)) 
+                && !Me.Stunned 
+                && !Me.Rooted 
+                && !Me.HasAnyAura("Food", "Drink") 
+                && !Me.IsDead 
+                && !Me.IsFlying 
+                && !Me.IsOnTransport;
         }
 
         public static void ValidateSettings()
@@ -68,16 +74,25 @@ namespace IWantMovement.Managers
 
         public static bool NeedToStop()
         {
-            return (Me.CurrentTarget.Distance <= MinDistance) && Me.IsMoving;
+           if ((Me.CurrentTarget.Distance <= MinDistance) && Me.IsMoving && Me.IsActuallyInCombat)
+           {
+               return true;
+           }
+
+            return false;
         }
 
         public static void Move()
         {
+            
             // Check we don't have bad settings
             ValidateSettings();
 
             // If we don't have a target to move to
             if (Me.CurrentTarget == null) return;
+
+            Log.Debug("[Need To Stop:{0}] [Need To Move:{1}] [Can Move:{2}]",
+                NeedToStop(), NeedToMove(), CanMove());
 
             // Check if we're close enough.
             if (NeedToStop()) WoWMovement.MoveStop();

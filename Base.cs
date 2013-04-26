@@ -15,7 +15,6 @@ using System.Windows.Forms;
 using IWantMovement.Managers;
 using Styx;
 using Styx.CommonBot;
-using Styx.CommonBot.POI;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
 using IWantMovement.Helper;
@@ -35,6 +34,7 @@ namespace IWantMovement
         private static string SvnRevision { get { return "$Rev$"; } }
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
         private DateTime _facingLast;
+        private static bool _initialized = false;
 
         #region Default Overrides
         public override string Author { get { return "Millz"; }}
@@ -52,14 +52,19 @@ namespace IWantMovement
 
         public override void Initialize()
         {
-            _previousTargetMethod = Targeting.Instance;
-            _thisTargetMethod = new Target();
+            if (!_initialized) // prevent init twice.
+            {
 
-            Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-            Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
-            Log.Info("~ Millz");
-            
-            base.Initialize();
+                _previousTargetMethod = Targeting.Instance;
+                _thisTargetMethod = new Target();
+
+                Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
+                Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
+                Log.Info("~ Millz");
+                _initialized = true;
+           
+                base.Initialize();
+            }
         }
 
         public override void Dispose()
@@ -71,17 +76,18 @@ namespace IWantMovement
 
         public override void Pulse()
         {
-            
+            //Log.Debug("[Facing Last:{0}] [Facing Throttle:{1}] [Allow Face:{2}]", _facingLast, Settings.FacingThrottleTime, DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime));
+            //Log.Debug("[Targeting Last:{0}] [Targeting Throttle:{1}] [Allow Targeting:{2}]", Target._targetLast, Settings.TargetingThrottleTime, DateTime.UtcNow > Target._targetLast.AddMilliseconds(Settings.TargetingThrottleTime));
+            //Log.Debug("[Movement Last:{0}] [Movement Throttle:{1}] [Allow Movement:{2}]", Movement._movementLast, Settings.MovementThrottleTime, DateTime.UtcNow > Movement._movementLast.AddMilliseconds(Settings.MovementThrottleTime));
+
             if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting)
             {
-                // we don't have control, let's take it.
                 Log.Warning("Taking control of targeting. If this message is being spammed, something else is trying to take control.");
                 Targeting.Instance = _thisTargetMethod;
             }
 
             if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget)
             {
-                // we've got control.
                 Target.AquireTarget();
             }
 
@@ -89,7 +95,7 @@ namespace IWantMovement
             {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
-                _facingLast = DateTime.UtcNow;
+                    _facingLast = DateTime.UtcNow;
             }
             
             if (Settings.EnableMovement)
@@ -97,18 +103,19 @@ namespace IWantMovement
                 Movement.Move();
             }
 
-            GetInCombat();
             
+            //GetInCombat();
+
         }
 
         public static void GetInCombat()
-        {
+        {/*
             if (Settings.ForceCombat && Settings.PullSpellName != "" && !Me.IsActuallyInCombat && Me.GotTarget && Me.CurrentTarget == BotPoi.Current.AsObject && Me.CurrentTarget.IsHostile && SpellManager.CanCast(Settings.PullSpellName, Me.CurrentTarget, true))
             {
                 Log.Info("[Casting: {0}] [Target: {1}] [Target HP: {2}] [Target Distance: {3}]", Settings.PullSpellName, Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                 SpellManager.Cast(Settings.PullSpellName);
             }
-
+           */
         }
     }
 }

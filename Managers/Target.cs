@@ -26,15 +26,21 @@ namespace IWantMovement.Managers
     {
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
         private readonly static Map Map = Me.CurrentMap;
-        private static DateTime _targetLast;
+        public static DateTime _targetLast;
 
         public static bool WantTarget()
         {
-            return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime)) && !Me.GotTarget && Me.CurrentTarget == null && !Me.Stunned && !Me.Rooted && Me.HasAnyAura("Food", "Drink") && !Me.IsDead && !Me.IsFlying && !Me.IsOnTransport;
+            return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime)) 
+                && !Me.GotTarget 
+                && !Me.Stunned && !Me.Rooted 
+                && !Me.HasAnyAura("Food", "Drink") 
+                && !Me.IsDead 
+                && !Me.IsFlying && !Me.IsOnTransport;
         }
 
         public static void AquireTarget()
         {
+            Log.Debug("[Want A Target:{0}]", WantTarget());
             if (!WantTarget()) return;
             
             WoWUnit unit;
@@ -55,7 +61,7 @@ namespace IWantMovement.Managers
                 }
 
                 // return closest pvp unit
-                unit = NearbyAttackableUnits(Me.Location, 50).FirstOrDefault(u => u != null && u.IsPlayer);
+                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.InLineOfSpellSight);
                 if (unit != null)
                 {
                     unit.Target();
@@ -70,7 +76,7 @@ namespace IWantMovement.Managers
                 if (Me.IsActuallyInCombat)
                 {
                     // get unit attacking party
-                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null);
+                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.InLineOfSpellSight);
                     if (unit != null)
                     {
                         unit.Target();
@@ -79,26 +85,29 @@ namespace IWantMovement.Managers
                     return;
                 }
 
-
                 // return closest unit
-                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null);
+                /*
+                unit = NearbyAttackableUnits(Me.Location, 30).FirstOrDefault(u => u != null);
                 if (unit != null)
                 {
                     unit.Target();
                     Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
                 }
                 return;
+                 */
 
             }
 
             // return closest unit
 
-            unit = NearbyAttackableUnits(Me.Location, 50).FirstOrDefault(u => u != null);
+            unit = NearbyAttackableUnits(Me.Location, 25).FirstOrDefault(u => u != null && ((Me.IsSafelyFacing(u) || u.IsTargetingMeOrPet) && u.InLineOfSpellSight));
             if (unit != null)
             {
                 unit.Target();
                 Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
             }
+
+
 
         }
 

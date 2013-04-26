@@ -114,12 +114,14 @@ namespace IWantMovement.Settings
         #endregion
 
         #region Pull Behavior
+        /*
         [Setting]
         [Styx.Helpers.DefaultValue("Auto Attack")]
         [Category("Pull Behavior")]
         [DisplayName("Spell Name")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpellName { get; set; }
+        */
 
         [Setting]
         [Styx.Helpers.DefaultValue(true)]
