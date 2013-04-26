@@ -1,4 +1,16 @@
-﻿using CommonBehaviors.Actions;
+﻿#region Revision info
+/*
+ * $Author: millz $
+ * $Date: 2013-04-26 12:18:24 +0100 (Fri, 26 Apr 2013) $
+ * $ID: $
+ * $Revision: 16 $
+ * $URL: https://subversion.assembla.com/svn/iwantmovement/trunk/IWantMovement/Managers/Target.cs $
+ * $LastChangedBy: millz $
+ * $ChangesMade: $
+ */
+#endregion
+
+using CommonBehaviors.Actions;
 using IWantMovement.Helper;
 using Styx;
 using Styx.CommonBot;
