@@ -74,7 +74,7 @@ namespace IWantMovement.Managers
 
         public static bool NeedToStop()
         {
-           if ((Me.CurrentTarget.Distance <= MinDistance) && Me.IsMoving && Me.IsActuallyInCombat)
+           if ((Me.CurrentTarget.Distance <= MinDistance) && Me.IsMoving && (Me.IsActuallyInCombat || Me.CurrentTarget.Distance <= 1.5))
            {
                return true;
            }

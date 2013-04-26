@@ -33,7 +33,7 @@ namespace IWantMovement.Helper
         public static void Debug(string logText, params object[] args)
         {
             if (logText == null) return;
-            Logging.Write(LogLevel.Diagnostic, Colors.DodgerBlue, "[IWM]: {0}", string.Format(logText, args));
+            Logging.Write(LogLevel.Diagnostic, Colors.Aqua, "[IWM]: {0}", string.Format(logText, args));
         }
     }
 }

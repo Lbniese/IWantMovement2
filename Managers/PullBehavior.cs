@@ -36,27 +36,19 @@ namespace IWantMovement.Managers
         public override Composite PullBehavior { get { return CreatePullBehavior; } }
         public static Composite PullBehaviorHook = CreatePullBehavior;
 
-        public override void Initialize()
-        {
-            
-            //TreeHooks.Instance.AddHook("Combat_Pull", PullBehaviorHook);
-        }
-
-        /*
-        public Dispose()
-        {
-            TreeHooks.Instance.RemoveHook("Combat_Pull", PullBehaviorHook);
-        }
-        */
-
         public static Composite CreatePullBehavior
         {
             get
             {
 
-                Log.Debug("CreatePullBehavior Called");
+
                 if (!Settings.ForceCombat)
+                {
+                    Log.Info("[Pulling] [Preventing Pull]");
                     return new ActionAlwaysSucceed();
+                }
+
+                if (StyxWoW.Me.CurrentTarget != null) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
 
                 var prio = new PrioritySelector();
                 switch (StyxWoW.Me.Class)

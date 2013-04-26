@@ -38,6 +38,7 @@ namespace IWantMovement.Managers
                 && !Me.IsFlying && !Me.IsOnTransport;
         }
 
+
         public static void AquireTarget()
         {
             Log.Debug("[Want A Target:{0}]", WantTarget());
@@ -48,67 +49,54 @@ namespace IWantMovement.Managers
             if (Map.IsBattleground || Map.IsArena)
             {
                 
-                if (Me.IsActuallyInCombat)
+                if (Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat))
                 {
                     // get a pvp unit attacking me
-                    unit = NearbyAttackableUnitsAttackingMe(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer);
+                    unit = NearbyAttackableUnitsAttackingMe(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile);
                     if (unit != null) 
                     {
                         unit.Target();
                         Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
+                        return;
                     }
-                    return;
+                    
                 }
 
                 // return closest pvp unit
-                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.InLineOfSpellSight);
+                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.InLineOfSpellSight);
                 if (unit != null)
                 {
                     unit.Target();
                     Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
+                    return;
                 }
-                return;
+                
 
             }
 
             if (Map.IsInstance || Map.IsDungeon || Map.IsRaid)
             {
-                if (Me.IsActuallyInCombat)
+                if (Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat))
                 {
                     // get unit attacking party
-                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.InLineOfSpellSight);
+                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.IsHostile && u.InLineOfSpellSight);
                     if (unit != null)
                     {
                         unit.Target();
                         Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
+                        return;
                     }
-                    return;
+                    
                 }
-
-                // return closest unit
-                /*
-                unit = NearbyAttackableUnits(Me.Location, 30).FirstOrDefault(u => u != null);
-                if (unit != null)
-                {
-                    unit.Target();
-                    Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
-                }
-                return;
-                 */
 
             }
 
-            // return closest unit
-
-            unit = NearbyAttackableUnits(Me.Location, 25).FirstOrDefault(u => u != null && ((Me.IsSafelyFacing(u) || u.IsTargetingMeOrPet) && u.InLineOfSpellSight));
+            unit = NearbyAttackableUnits(Me.Location, 25).FirstOrDefault(u => u != null && u.IsHostile && ((Me.IsSafelyFacing(u) || u.IsTargetingMeOrPet) && u.InLineOfSpellSight));
             if (unit != null)
             {
                 unit.Target();
                 Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
             }
-
-
-
         }
 
         #region Core Unit Checks
