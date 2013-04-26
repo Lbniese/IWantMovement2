@@ -130,5 +130,82 @@ namespace IWantMovement.Settings
         [Description("Will override the combat routines pull behavior.")]
         public bool ForceCombat { get; set; }
         #endregion
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Death Grip")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Death Knight")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellDeathKnight { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Auto Shot")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Hunter")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellHunter { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Judgement")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Paladin")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellPaladin { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Shadow Bolt")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Warlock")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellWarlock { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Frostbolt")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Mage")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellMage { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Shadow Word: Pain")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Priest")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellPriest { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Lightning Bolt")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Shaman")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellShaman { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Throw")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Rogue")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellRogue { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Crackling Jade Lightning")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Monk")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellMonk { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Moonfire")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Druid")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellDruid { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Charge")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability: Warrior")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpellWarrior { get; set; }
     }
 }

@@ -13,8 +13,8 @@
 using System;
 using CommonBehaviors.Actions;
 using IWantMovement.Helper;
+using IWantMovement.Settings;
 using Styx;
-using Styx.Common;
 using Styx.CommonBot;
 using Styx.CommonBot.Routines;
 using Styx.TreeSharp;
@@ -28,6 +28,7 @@ namespace IWantMovement.Managers
     {
         internal static readonly Version Version = new Version(0, 0, 1);
         //internal static bool EnablePullSpells = true;
+        private static IWMSettings Settings { get { return IWMSettings.Instance; } }
 
         public override string Name { get { return "I Want Movement"; } }
         public override WoWClass Class { get { return StyxWoW.Me.Class; } }
@@ -54,7 +55,7 @@ namespace IWantMovement.Managers
             {
 
                 Log.Debug("CreatePullBehavior Called");
-                if (!Settings.IWMSettings.Instance.ForceCombat)
+                if (!Settings.ForceCombat)
                     return new ActionAlwaysSucceed();
 
                 var prio = new PrioritySelector();
@@ -63,49 +64,77 @@ namespace IWantMovement.Managers
                     case WoWClass.Paladin:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Judgement");
+                            SpellManager.Cast(Settings.PullSpellPaladin);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Monk:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Crackling Jade Lightning");
+                            SpellManager.Cast(Settings.PullSpellMonk);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Rogue:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Throw");
+                            SpellManager.Cast(Settings.PullSpellRogue);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Priest:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Shadow Word: Pain");
+                            SpellManager.Cast(Settings.PullSpellPriest);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Druid:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Moonfire");
+                            SpellManager.Cast(Settings.PullSpellDruid);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Shaman:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Lightning Bolt");
+                            SpellManager.Cast(Settings.PullSpellShaman);
                             return RunStatus.Success;
                         }));
                         break;
                     case WoWClass.Mage:
                         prio.AddChild(new Action(delegate
                         {
-                            SpellManager.Cast("Frostbolt");
+                            SpellManager.Cast(Settings.PullSpellMage);
+                            return RunStatus.Success;
+                        }));
+                        break;
+                    case WoWClass.DeathKnight:
+                        prio.AddChild(new Action(delegate
+                        {
+                            SpellManager.Cast(Settings.PullSpellDeathKnight);
+                            return RunStatus.Success;
+                        }));
+                        break;
+                    case WoWClass.Warlock:
+                        prio.AddChild(new Action(delegate
+                        {
+                            SpellManager.Cast(Settings.PullSpellWarlock);
+                            return RunStatus.Success;
+                        }));
+                        break;
+                    case WoWClass.Warrior:
+                        prio.AddChild(new Action(delegate
+                        {
+                            SpellManager.Cast(Settings.PullSpellWarrior);
+                            return RunStatus.Success;
+                        }));
+                        break;
+                    case WoWClass.Hunter:
+                        prio.AddChild(new Action(delegate
+                        {
+                            SpellManager.Cast(Settings.PullSpellHunter);
                             return RunStatus.Success;
                         }));
                         break;
