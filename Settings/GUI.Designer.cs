@@ -37,9 +37,9 @@
             // pgSettings
             // 
             this.pgSettings.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pgSettings.Location = new System.Drawing.Point(0, 24);
+            this.pgSettings.Location = new System.Drawing.Point(0, 25);
             this.pgSettings.Name = "pgSettings";
-            this.pgSettings.Size = new System.Drawing.Size(297, 358);
+            this.pgSettings.Size = new System.Drawing.Size(297, 451);
             this.pgSettings.TabIndex = 0;
             this.pgSettings.Click += new System.EventHandler(this.pgSettings_Click);
             // 
@@ -49,14 +49,15 @@
             this.donateToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(297, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(297, 25);
             this.menuStrip1.TabIndex = 1;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // donateToolStripMenuItem
             // 
+            this.donateToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(218, 20);
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(253, 21);
             this.donateToolStripMenuItem.Text = "Donate to Millz\'s new Hardware Fund";
             this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
             // 
@@ -64,7 +65,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(297, 382);
+            this.ClientSize = new System.Drawing.Size(297, 476);
             this.Controls.Add(this.pgSettings);
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

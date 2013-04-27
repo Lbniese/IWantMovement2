@@ -30,7 +30,7 @@ namespace IWantMovement.Managers
         private static int MinDistance { get { return Settings.IWMSettings.Instance.MinDistance; } }
         public static bool ValidatedSettings = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
-        public static DateTime _movementLast;
+        private static DateTime _movementLast;
 
         public static bool CanMove()
         {
@@ -64,6 +64,7 @@ namespace IWantMovement.Managers
                 {
                     Log.Warning("Your min distance [{0}] should be lower than max distance [{1}]. Consider changing.", MinDistance, MaxDistance);
                 }
+
             }
         }
 
@@ -74,7 +75,7 @@ namespace IWantMovement.Managers
 
         public static bool NeedToStop()
         {
-           if ((Me.CurrentTarget.Distance <= MinDistance) && Me.IsMoving && (Me.IsActuallyInCombat || Me.CurrentTarget.Distance <= 1.5))
+           if (Me.CurrentTarget != null && (Me.CurrentTarget.Distance <= MinDistance || Me.CurrentTarget.Distance <= 1.5) && Me.IsMoving)
            {
                return true;
            }

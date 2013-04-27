@@ -13,8 +13,8 @@
 using System;
 using System.Windows.Forms;
 using Styx;
-using Styx.Common;
 using Styx.CommonBot;
+using Styx.CommonBot.Routines;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
 using IWantMovement.Helper;
@@ -39,6 +39,9 @@ namespace IWantMovement
 
         private static bool _initialized;
 
+        private ICombatRoutine _decoratedCombatRoutine;
+        private ICombatRoutine _undecoratedCombatRoutine;
+
         #region Default Overrides
         public override string Author { get { return "Millz"; }}
         public override string ButtonText { get { return "Settings"; }}
@@ -61,8 +64,6 @@ namespace IWantMovement
                 _previousTargetMethod = Targeting.Instance;
                 Log.Info("Creating our targeting instance.");
                 _thisTargetMethod = new Target();
-                Log.Info("Adding combat routine hook to pull behavior.");
-                TreeHooks.Instance.AddHook("Combat_Pull", Managers.IWantMovement.PullBehaviorHook);
 
                 Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
                 Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
@@ -75,15 +76,25 @@ namespace IWantMovement
 
         public override void Dispose()
         {
+            Log.Info("Removing IWantMovement Hooks");
             Targeting.Instance = _previousTargetMethod;
-            TreeHooks.Instance.RemoveHook("Combat_Pull", Managers.IWantMovement.PullBehaviorHook);
-            Log.Info("Disabling IWantMovement");
+            RoutineManager.Current = _undecoratedCombatRoutine;
+            Log.Info("Disabled IWantMovement");
             base.Dispose();
         }
 
         public override void Pulse()
         {
-            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200)) { return; } // Throttle the plugin to 200ms. We don't need to pulse that often.
+            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(500)) { return; } // Throttle the plugin. We don't need to pulse too often.
+
+            if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
+            {
+                Log.Info("Installing Combat Routine Hook...");
+                _undecoratedCombatRoutine = RoutineManager.Current;
+                _decoratedCombatRoutine = new IWantMovementCR(RoutineManager.Current);
+                RoutineManager.Current = _decoratedCombatRoutine;
+                Log.Info("Combat Routine Hook Installed!");
+            }
 
             if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting)
             {
@@ -93,13 +104,10 @@ namespace IWantMovement
 
             if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget)
             {
-                Target.AquireTarget();
-            }
-
-            if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && Me.GotTarget && (Me.CurrentTarget.IsDead || !Me.CurrentTarget.IsTargetingMeOrPet && Me.CurrentTarget.Distance > 70))
-            {
-                Log.Info("[Target: {0}] [Reason: {1}] [Clearing]", Me.CurrentTarget.Name, Me.CurrentTarget.IsDead ? "Dead" : "Long Distance");
-                Me.ClearTarget();
+                if (!Me.GotTarget) 
+                { Target.AquireTarget(); }
+                else 
+                { Target.ClearTarget(); }
             }
 
             if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)

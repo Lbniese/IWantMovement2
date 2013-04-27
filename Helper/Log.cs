@@ -27,13 +27,13 @@ namespace IWantMovement.Helper
         public static void Warning(string logText, params object[] args)
         {
             if (logText == null) return;
-            Logging.Write(LogLevel.Normal, Colors.Fuchsia, "[IWM]: {0}", string.Format(logText, args));
+            Logging.Write(LogLevel.Normal, Colors.Fuchsia, "[IWM Warning]: {0}", string.Format(logText, args));
         }
 
         public static void Debug(string logText, params object[] args)
         {
             if (logText == null) return;
-            Logging.Write(LogLevel.Diagnostic, Colors.Aqua, "[IWM]: {0}", string.Format(logText, args));
+            Logging.Write(LogLevel.Diagnostic, Colors.Aqua, "[IWM Debug]: {0}", string.Format(logText, args));
         }
     }
 }

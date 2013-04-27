@@ -26,7 +26,7 @@ namespace IWantMovement.Managers
     {
         public static LocalPlayer Me { get { return StyxWoW.Me; } }
         private readonly static Map Map = Me.CurrentMap;
-        public static DateTime _targetLast;
+        private static DateTime _targetLast;
 
         public static bool WantTarget()
         {
@@ -52,7 +52,7 @@ namespace IWantMovement.Managers
                 if (Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat))
                 {
                     // get a pvp unit attacking me
-                    unit = NearbyAttackableUnitsAttackingMe(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile);
+                    unit = NearbyAttackableUnitsAttackingMe(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.Attackable);
                     if (unit != null) 
                     {
                         unit.Target();
@@ -63,7 +63,7 @@ namespace IWantMovement.Managers
                 }
 
                 // return closest pvp unit
-                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.InLineOfSpellSight);
+                unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.InLineOfSpellSight && u.Attackable);
                 if (unit != null)
                 {
                     unit.Target();
@@ -79,7 +79,7 @@ namespace IWantMovement.Managers
                 if (Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat))
                 {
                     // get unit attacking party
-                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.IsHostile && u.InLineOfSpellSight);
+                    unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.IsHostile && u.InLineOfSpellSight && u.Attackable);
                     if (unit != null)
                     {
                         unit.Target();
@@ -91,12 +91,42 @@ namespace IWantMovement.Managers
 
             }
 
-            unit = NearbyAttackableUnits(Me.Location, 25).FirstOrDefault(u => u != null && u.IsHostile && ((Me.IsSafelyFacing(u) || u.IsTargetingMeOrPet) && u.InLineOfSpellSight));
+            unit = NearbyAttackableUnits(Me.Location, 25).FirstOrDefault(u => u != null && u.IsHostile && u.Attackable && ((Me.IsSafelyFacing(u) || u.IsTargetingMeOrPet) && u.InLineOfSpellSight));
             if (unit != null)
             {
                 unit.Target();
                 Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.Name, unit.HealthPercent, unit.Distance);
             }
+        }
+
+        public static void ClearTarget()
+        {
+            if (Me.CurrentTarget == null) { return; } 
+
+            if (Me.CurrentTarget.IsDead)
+            {
+                Log.Info("[Clearing {0}] [Reason: Dead]", Me.CurrentTarget.Name);
+                Me.ClearTarget();
+            }
+
+            if (!Me.CurrentTarget.IsTargetingMeOrPet && Me.CurrentTarget.Distance > 70)
+            {
+                Log.Info("[Clearing {0}] [Reason: Long Distance: {1}]", Me.CurrentTarget.Name, Me.CurrentTarget.Distance);
+                Me.ClearTarget();
+            }
+
+            if (!Me.CurrentTarget.Attackable && !Me.CurrentTarget.IsHostile)
+            {
+                Log.Info("[Clearing {0}] [Reason: Target Not Hostile]", Me.CurrentTarget.Name);
+                Me.ClearTarget();
+            }
+
+            if ((Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat)) && (!Me.CurrentTarget.IsTargetingMeOrPet && !Me.CurrentTarget.IsTargetingMyPartyMember && !Me.CurrentTarget.IsTargetingMyRaidMember))
+            {
+                Log.Info("[Clearing {0}] [Reason: Combat with unit other than target]", Me.CurrentTarget.Name);
+                Me.ClearTarget();
+            }
+
         }
 
         #region Core Unit Checks
