@@ -66,7 +66,7 @@ namespace IWantMovement
                 _thisTargetMethod = new Target();
 
                 Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-                Log.Info("Designed to be used with PureRotation - http://tinyurl.com/purev2");
+                Log.Info("Have you tried PureRotation yet? - http://tinyurl.com/purev2");
                 Log.Info("-- Millz");
                 _initialized = true;
            
@@ -85,7 +85,7 @@ namespace IWantMovement
 
         public override void Pulse()
         {
-            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(500)) { return; } // Throttle the plugin. We don't need to pulse too often.
+            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200)) { return; } // Throttle the plugin. Pulsing too often will slow it down rather than go faster.
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
             {
