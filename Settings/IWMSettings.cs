@@ -45,35 +45,35 @@ namespace IWantMovement.Settings
         #region Movement
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("Movement")]
+        [Category("- Movement")]
         [DisplayName("Enable Movement")]
         [Description("Allow IWM to handle movement")]
         public bool EnableMovement { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(35)]
-        [Category("Movement")]
+        [Category("- Movement")]
         [DisplayName("Max Distance")]
         [Description("Maximum distance we should be away from target before starting to move closer.")]
         public int MaxDistance { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(25)]
-        [Category("Movement")]
+        [Category("- Movement")]
         [DisplayName("Min Distance")]
         [Description("Minimum distance the target should be away before from us, and for us to stop moving.")]
         public int MinDistance { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("Movement")]
+        [Category("- Movement")]
         [DisplayName("Move Behind Target")]
         [Description("Attempt to move behind the target (i.e. for melee classes)")]
         public bool MoveBehindTarget { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(1000)]
-        [Category("Movement")]
+        [Category("- Movement")]
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
         public int MovementThrottleTime { get; set; }
@@ -83,14 +83,14 @@ namespace IWantMovement.Settings
         #region Facing
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("Facing")]
+        [Category("- Facing")]
         [DisplayName("Enable Facing")]
         [Description("Allow IWM to handle facing target")]
         public bool EnableFacing { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(1000)]
-        [Category("Facing")]
+        [Category("- Facing")]
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
         public int FacingThrottleTime { get; set; }
@@ -100,28 +100,20 @@ namespace IWantMovement.Settings
         #region Targeting
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
-        [Category("Targeting")]
+        [Category("- Targeting")]
         [DisplayName("Enable Targeting")]
         [Description("Allow IWM to handle targeting")]
         public bool EnableTargeting { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(5000)]
-        [Category("Targeting")]
+        [Category("- Targeting")]
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
         public int TargetingThrottleTime { get; set; }
         #endregion
 
         #region Pull Behavior
-        /*
-        [Setting]
-        [Styx.Helpers.DefaultValue("Auto Attack")]
-        [Category("Pull Behavior")]
-        [DisplayName("Spell Name")]
-        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
-        public string PullSpellName { get; set; }
-        */
 
         [Setting]
         [Styx.Helpers.DefaultValue(true)]
@@ -129,8 +121,7 @@ namespace IWantMovement.Settings
         [DisplayName("Force Combat")]
         [Description("Will override the combat routines pull behavior.")]
         public bool ForceCombat { get; set; }
-        #endregion
-
+        
         [Setting]
         [Styx.Helpers.DefaultValue("Death Grip")]
         [Category("Pull Behavior")]
@@ -207,5 +198,6 @@ namespace IWantMovement.Settings
         [DisplayName("Pull Ability: Warrior")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpellWarrior { get; set; }
+        #endregion
     }
 }
