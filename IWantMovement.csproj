@@ -45,6 +45,7 @@
     <Compile Include="Base.cs" />
     <Compile Include="Helper\Log.cs" />
     <Compile Include="Managers\CombatRoutineHook.cs" />
+    <Compile Include="Managers\Rest.cs" />
     <Compile Include="Settings\GUI.cs">
       <SubType>Form</SubType>
     </Compile>

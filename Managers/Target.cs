@@ -41,7 +41,7 @@ namespace IWantMovement.Managers
 
         public static void AquireTarget()
         {
-            Log.Debug("[Want A Target:{0}]", WantTarget());
+            //Log.Debug("[Want A Target:{0}]", WantTarget());
             if (!WantTarget()) return;
             
             WoWUnit unit;

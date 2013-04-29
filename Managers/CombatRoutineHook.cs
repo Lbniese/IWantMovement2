@@ -49,8 +49,8 @@ namespace IWantMovement.Managers
         public Composite MoveToTargetBehavior { get { return _undecoratedCR.MoveToTargetBehavior; } }
         public Composite PreCombatBuffBehavior { get { return _undecoratedCR.PreCombatBuffBehavior; } }
         public Composite PullBuffBehavior { get { return _undecoratedCR.PullBuffBehavior; } }
-        public Composite RestBehavior { get { return _undecoratedCR.RestBehavior; } }
-        public Composite PullBehavior { get { return CreatePullBehavior; } } // Our hook into Pull Behavior
+        public Composite RestBehavior { get { return Managers.Rest.DefaultRestBehaviour(); }} // Hook into rest behavior
+        public Composite PullBehavior { get { return CreatePullBehavior; } } // Hook into Pull Behavior
 
         public bool NeedDeath { get { return _undecoratedCR.NeedDeath; } }
         public bool NeedHeal { get { return _undecoratedCR.NeedHeal; } }
@@ -64,12 +64,14 @@ namespace IWantMovement.Managers
         public void Heal() { _undecoratedCR.Heal(); }
         public void CombatBuff() { _undecoratedCR.CombatBuff(); }
         public void PreCombatBuff() { _undecoratedCR.PreCombatBuff(); }
-        public void Rest() { _undecoratedCR.Rest(); }
+        public void Rest() { IwmRestBehavior(); _undecoratedCR.Rest(); } // Hook into rest behavior
         public void Pulse() { _undecoratedCR.Pulse(); }
         public void ShutDown() { _undecoratedCR.ShutDown(); }
         public void PullBuff() { _undecoratedCR.PullBuff(); }
-        public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); } // Our call to Pull Behavior
+        public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); } // Hook into pull behavior
+
         public Composite IwmPullBehavior() { return CreatePullBehavior; }
+        public Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
         #endregion
 
 

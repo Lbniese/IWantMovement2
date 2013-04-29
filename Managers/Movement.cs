@@ -10,6 +10,15 @@
  */
 #endregion
 
+
+/*
+ * 
+ * A lot of code in here was taken from CLU's Movement.cs with permission from Wulf.
+ * Big credits/thanks go to the CLU/PureRotation team (past and present) for code in here.
+ * 
+ * -- Millz
+ * 
+ */
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -27,10 +36,14 @@ namespace IWantMovement.Managers
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
-        private static int MinDistance { get { return Settings.IWMSettings.Instance.MinDistance; } }
+        private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
         public static bool ValidatedSettings = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
+        public delegate WoWPoint LocationRetriever(object context);
+        public delegate float DynamicRangeRetriever(object context);
+        //private static float CombatMinDistance { get { return Me.IsMelee() ? 1f : 30f; } }
+        //private static float CombatMaxDistance { get { return Me.IsMelee() ? 3.2f : 40f; } }
 
         public static bool CanMove()
         {
@@ -47,35 +60,42 @@ namespace IWantMovement.Managers
         {
             if (!ValidatedSettings)
             {
-                if (Me.IsMelee() && MaxDistance > MeleeRange)
+                if (Me.IsMelee() && MaxDistance > 6f)
                 {
-                    Log.Warning("Your max distance setting is too high for a melee class. Reduce it!");
+                    Log.Warning("Your max distance setting({0}) is too high for a melee class. Reduce it!", MaxDistance);
                 }
 
                 if (MaxDistance > 40)
                 {
                     Log.Warning("Max distance is {0}! This is very high for any class!", MaxDistance);
                 }
-                if (MinDistance <= 2)
+                if (StopDistance <= 2)
                 {
-                    Log.Warning("Min distance is {0}! This is very low for any class!", MinDistance);
+                    Log.Warning("Stop distance is {0}! This is very low for any class!", StopDistance);
                 }
-                if (MinDistance >= MaxDistance)
+                if (StopDistance >= MaxDistance)
                 {
-                    Log.Warning("Your min distance [{0}] should be lower than max distance [{1}]. Consider changing.", MinDistance, MaxDistance);
+                    Log.Warning("Your stop distance [{0}] should be lower than max distance [{1}].", StopDistance, MaxDistance);
                 }
+
+                if (MaxDistance - StopDistance > 7)
+                {
+                    Log.Warning("Your Max Distance [{0}] is much higher than your Stop Distance [{1}]. Consider lowering the difference between these 2 values.", MaxDistance, StopDistance);
+                }
+
+                ValidatedSettings = true;
 
             }
         }
 
         public static bool NeedToMove()
         {
-            return (Me.CurrentTarget.Distance > MaxDistance) && !Me.IsMoving;
+            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance)   /* && !Me.IsMoving*/;
         }
 
         public static bool NeedToStop()
         {
-           if (Me.CurrentTarget != null && (Me.CurrentTarget.Distance <= MinDistance || Me.CurrentTarget.Distance <= 1.5) && Me.IsMoving)
+           if (Me.CurrentTarget != null && (!Me.IsMelee() && Me.CurrentTarget.Distance <= StopDistance || Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
            {
                return true;
            }
@@ -92,8 +112,7 @@ namespace IWantMovement.Managers
             // If we don't have a target to move to
             if (Me.CurrentTarget == null) return;
 
-            Log.Debug("[Need To Stop:{0}] [Need To Move:{1}] [Can Move:{2}]",
-                NeedToStop(), NeedToMove(), CanMove());
+            //Log.Debug("[Need To Stop:{0}] [Need To Move:{1}] [Can Move:{2}]", NeedToStop(), NeedToMove(), CanMove());
 
             // Check if we're close enough.
             if (NeedToStop()) WoWMovement.MoveStop();
@@ -117,6 +136,7 @@ namespace IWantMovement.Managers
 
 
         #region Extentions
+
         public static bool HasAnyAura(this WoWUnit unit, params string[] auraNames)
         {
             var auras = unit.GetAllAuras();
@@ -159,6 +179,20 @@ namespace IWantMovement.Managers
                 return false;
             }
         }
+
+        /*
+        private static bool IsFlyingUnit
+        {
+            get
+            {
+                return StyxWoW.Me.CurrentTarget != null &&
+                       (StyxWoW.Me.CurrentTarget.IsFlying ||
+                        StyxWoW.Me.CurrentTarget.Distance2DSqr < 5 * 5 &&
+                        Math.Abs(StyxWoW.Me.Z - StyxWoW.Me.CurrentTarget.Z) >= 5);
+            }
+        }
+        */
+
         #endregion
 
         #region Calculations
@@ -187,6 +221,31 @@ namespace IWantMovement.Managers
                 return Math.Max(5f, StyxWoW.Me.CombatReach + 1.3333334f + StyxWoW.Me.CurrentTarget.CombatReach);
             }
         }
+
+
+        public static float DistanceToTargetBoundingBox()
+        {
+            return
+                (float)
+                (StyxWoW.Me.CurrentTarget == null
+                     ? 999999f
+                     : Math.Round(DistanceToTargetBoundingBox(Me.CurrentTarget), 0));
+        }
+
+        public static float DistanceToTargetBoundingBox(WoWUnit target)
+        {
+            if (target != null)
+            {
+                return (float)Math.Max(0f, target.Distance - target.BoundingRadius);
+            }
+            return 99999;
+        }
+
+        public static bool PlayerIsChanneling
+        {
+            get { return StyxWoW.Me.ChanneledCastingSpellId != 0; }
+        }
+
         #endregion
 
     }

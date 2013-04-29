@@ -58,11 +58,11 @@ namespace IWantMovement.Settings
         public int MaxDistance { get; set; }
 
         [Setting]
-        [Styx.Helpers.DefaultValue(25)]
+        [Styx.Helpers.DefaultValue(33)]
         [Category("- Movement")]
-        [DisplayName("Min Distance")]
-        [Description("Minimum distance the target should be away before from us, and for us to stop moving.")]
-        public int MinDistance { get; set; }
+        [DisplayName("Stop Distance")]
+        [Description("The distance from target before we should stop moving.")]
+        public int StopDistance { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
@@ -113,6 +113,23 @@ namespace IWantMovement.Settings
         public int TargetingThrottleTime { get; set; }
         #endregion
 
+        #region
+        [Setting]
+        [Styx.Helpers.DefaultValue(false)]
+        [Category("- Rest")]
+        [DisplayName("Enable Rest Behavior")]
+        [Description("Allow IWM to handle resting (i.e. eating food, drinking for mana)")]
+        public bool EnableRest { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(true)]
+        [Category("- Rest")]
+        [DisplayName("Allow Special Foods/Drinks")]
+        [Description("Will allow the routine to use special foods (such as those that give stat buffs when eaten).")]
+        public bool AllowSpecialFood { get; set; }
+
+        #endregion
+
         #region Pull Behavior
 
         [Setting]
@@ -137,7 +154,7 @@ namespace IWantMovement.Settings
         public string PullSpellHunter { get; set; }
 
         [Setting]
-        [Styx.Helpers.DefaultValue("Judgement")]
+        [Styx.Helpers.DefaultValue("Judgment")]
         [Category("Pull Behavior")]
         [DisplayName("Pull Ability: Paladin")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]

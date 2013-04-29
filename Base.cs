@@ -85,7 +85,7 @@ namespace IWantMovement
 
         public override void Pulse()
         {
-            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200)) { return; } // Throttle the plugin. Pulsing too often will slow it down rather than go faster.
+            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200)) { return; } 
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
             {
@@ -96,13 +96,13 @@ namespace IWantMovement
                 Log.Info("Combat Routine Hook Installed!");
             }
 
-            if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting)
+            if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
                 Log.Warning("Taking control of targeting. If this message is being spammed, something else is trying to take control.");
                 Targeting.Instance = _thisTargetMethod;
             }
 
-            if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget)
+            if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
                 if (!Me.GotTarget) 
                 { Target.AquireTarget(); }
@@ -110,14 +110,14 @@ namespace IWantMovement
                 { Target.ClearTarget(); }
             }
 
-            if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
+            if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50 && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
                     _facingLast = DateTime.UtcNow;
             }
-            
-            if (Settings.EnableMovement) { Movement.Move(); }
+
+            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink")) { Movement.Move(); }
 
             _pluginThrottle = DateTime.UtcNow;
             
