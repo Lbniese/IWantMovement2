@@ -115,7 +115,7 @@ namespace IWantMovement.Managers
                 Me.ClearTarget();
             }
 
-            if (!Me.CurrentTarget.Attackable && !Me.CurrentTarget.IsHostile)
+            if (!Me.CurrentTarget.Attackable && (!Me.CurrentTarget.IsHostile || (Me.CurrentTarget.IsFriendly && Me.CurrentTarget.IsPlayer)))
             {
                 Log.Info("[Clearing {0}] [Reason: Target Not Hostile]", Me.CurrentTarget.Name);
                 Me.ClearTarget();
