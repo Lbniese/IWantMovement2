@@ -74,20 +74,18 @@ namespace IWantMovement.Managers
         public Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
         #endregion
 
-
-        // ReSharper disable InconsistentNaming
         readonly ICombatRoutine _undecoratedCR;
         public IWantMovementCR(ICombatRoutine undecoratedCR)
-        // ReSharper restor InconsistentNaming
+
         {
             if (undecoratedCR != null)
             {
                 Log.Info("Storing Combat Routine");
                 _undecoratedCR = undecoratedCR;
             }
-            {
-                Log.Warning("Current Combat Routine is null - Override behavior may not work correctly.");
-            }
+            //{
+            //    Log.Warning("Current Combat Routine is null - Override behavior may not work correctly.");
+            //}
         }
         
         public void Initialize()
