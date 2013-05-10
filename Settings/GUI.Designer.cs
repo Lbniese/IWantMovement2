@@ -31,6 +31,7 @@
             this.pgSettings = new System.Windows.Forms.PropertyGrid();
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.donateToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.reportAnIssueToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,7 +47,8 @@
             // menuStrip1
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.donateToolStripMenuItem});
+            this.donateToolStripMenuItem,
+            this.reportAnIssueToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(297, 25);
@@ -57,9 +59,17 @@
             // 
             this.donateToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.donateToolStripMenuItem.Name = "donateToolStripMenuItem";
-            this.donateToolStripMenuItem.Size = new System.Drawing.Size(253, 21);
-            this.donateToolStripMenuItem.Text = "Donate to Millz\'s new Hardware Fund";
+            this.donateToolStripMenuItem.Size = new System.Drawing.Size(65, 21);
+            this.donateToolStripMenuItem.Text = "Donate";
             this.donateToolStripMenuItem.Click += new System.EventHandler(this.donateToolStripMenuItem_Click);
+            // 
+            // reportAnIssueToolStripMenuItem
+            // 
+            this.reportAnIssueToolStripMenuItem.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            this.reportAnIssueToolStripMenuItem.Name = "reportAnIssueToolStripMenuItem";
+            this.reportAnIssueToolStripMenuItem.Size = new System.Drawing.Size(115, 21);
+            this.reportAnIssueToolStripMenuItem.Text = "Report an Issue";
+            this.reportAnIssueToolStripMenuItem.Click += new System.EventHandler(this.reportAnIssueToolStripMenuItem_Click);
             // 
             // GUI
             // 
@@ -86,6 +96,7 @@
         private System.Windows.Forms.PropertyGrid pgSettings;
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem donateToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem reportAnIssueToolStripMenuItem;
 
 
 

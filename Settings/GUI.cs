@@ -46,6 +46,11 @@ namespace IWantMovement.Settings
             Process.Start("http://bit.ly/YEb4SU");
         }
 
+        private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://www.thebuddyforum.com/honorbuddy-forum/plugins/movement/116958-plugin-i-want-movement-use-lazyraider-crs-afk-bot-bases.html");
+        }
+
 
     }
 }

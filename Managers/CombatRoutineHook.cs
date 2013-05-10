@@ -160,10 +160,16 @@ namespace IWantMovement.Managers
                 if (SpellManager.CanCast(spellName, StyxWoW.Me.CurrentTarget))
                 {
                     Log.Info("[Casting: {0}] [Target: {1}] ", spellName, StyxWoW.Me.CurrentTarget);
-                    SpellManager.Cast(spellName);
+                    var result = SpellManager.Cast(spellName);
+
+                    if (!result)
+                    {
+                        Log.Info("[Failed to Cast: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
+                    }
                 }
                 {
-                    Log.Info("[Failed to Cast: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
+                    if (!Me.IsCasting || !Me.IsChanneling)
+                        Log.Debug("[CanCast Failed for: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
                 }
             }
         }
