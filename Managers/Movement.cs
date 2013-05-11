@@ -38,14 +38,15 @@ namespace IWantMovement.Managers
         private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
         private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
         public static bool ValidatedSettings = false;
+        private static bool _displayWarning = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
-        public delegate WoWPoint LocationRetriever(object context);
-        public delegate float DynamicRangeRetriever(object context);
+        //public delegate WoWPoint LocationRetriever(object context);
+        //public delegate float DynamicRangeRetriever(object context);
         //private static float CombatMinDistance { get { return Me.IsMelee() ? 1f : 30f; } }
         //private static float CombatMaxDistance { get { return Me.IsMelee() ? 3.2f : 40f; } }
 
-        public static bool CanMove()
+        private static bool CanMove()
         {
             return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime)) 
                 && !Me.Stunned 
@@ -56,31 +57,40 @@ namespace IWantMovement.Managers
                 && !Me.IsOnTransport;
         }
 
-        public static void ValidateSettings()
+        private static void ValidateSettings()
         {
             if (!ValidatedSettings)
             {
-                if (Me.IsMelee() && MaxDistance > 6f)
+                if (Me.IsMelee() && MaxDistance > 5f)
                 {
+                    _displayWarning = true;
                     Log.Warning("Your max distance setting({0}) is too high for a melee class. Reduce it!", MaxDistance);
                 }
 
                 if (MaxDistance > 40)
                 {
+                    _displayWarning = true;
                     Log.Warning("Max distance is {0}! This is very high for any class!", MaxDistance);
                 }
-                if (StopDistance <= 2)
+                if (StopDistance < 2)
                 {
+                    _displayWarning = true;
                     Log.Warning("Stop distance is {0}! This is very low for any class!", StopDistance);
                 }
                 if (StopDistance >= MaxDistance)
                 {
+                    _displayWarning = true;
                     Log.Warning("Your stop distance [{0}] should be lower than max distance [{1}].", StopDistance, MaxDistance);
                 }
 
                 if (MaxDistance - StopDistance > 7)
                 {
+                    _displayWarning = true;
                     Log.Warning("Your Max Distance [{0}] is much higher than your Stop Distance [{1}]. Consider lowering the difference between these 2 values.", MaxDistance, StopDistance);
+                }
+                if (_displayWarning)
+                {
+                    Log.Warning("This warning will not prevent the plugin from working, however it may not work as expected.");
                 }
 
                 ValidatedSettings = true;
@@ -88,12 +98,12 @@ namespace IWantMovement.Managers
             }
         }
 
-        public static bool NeedToMove()
+        private static bool NeedToMove()
         {
             return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance)   /* && !Me.IsMoving*/;
         }
 
-        public static bool NeedToStop()
+        private static bool NeedToStop()
         {
            if (Me.CurrentTarget != null && (!Me.IsMelee() && Me.CurrentTarget.Distance <= StopDistance || Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
            {
@@ -144,7 +154,7 @@ namespace IWantMovement.Managers
             return auras.Any(a => hashes.Contains(a.Name));
         }
 
-        public static bool IsMelee(this WoWUnit unit)
+        private static bool IsMelee(this WoWUnit unit)
         {
             {
                 if (unit != null)
@@ -206,7 +216,7 @@ namespace IWantMovement.Managers
         /// <summary>
         ///     Returns the current Melee range for the player Unit.DistanceToTargetBoundingBox(target)
         /// </summary>
-        public static float MeleeRange
+        private static float MeleeRange
         {
             get
             {
@@ -222,7 +232,7 @@ namespace IWantMovement.Managers
             }
         }
 
-
+        /*
         public static float DistanceToTargetBoundingBox()
         {
             return
@@ -231,7 +241,7 @@ namespace IWantMovement.Managers
                      ? 999999f
                      : Math.Round(DistanceToTargetBoundingBox(Me.CurrentTarget), 0));
         }
-
+        
         public static float DistanceToTargetBoundingBox(WoWUnit target)
         {
             if (target != null)
@@ -240,12 +250,12 @@ namespace IWantMovement.Managers
             }
             return 99999;
         }
-
+        
         public static bool PlayerIsChanneling
         {
             get { return StyxWoW.Me.ChanneledCastingSpellId != 0; }
         }
-
+        */
         #endregion
 
     }
