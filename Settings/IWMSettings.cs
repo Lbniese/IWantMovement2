@@ -23,7 +23,7 @@ namespace IWantMovement.Settings
         private static IWMSettings _instance;
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
 
-        public IWMSettings()
+        private IWMSettings()
             : base(SettingsPath + ".config")
         {
         }
@@ -33,7 +33,7 @@ namespace IWantMovement.Settings
             get { return _instance ?? (_instance = new IWMSettings()); }
         }
 
-        public static string SettingsPath
+        private static string SettingsPath
         {
             get
             {
@@ -113,7 +113,7 @@ namespace IWantMovement.Settings
         public int TargetingThrottleTime { get; set; }
         #endregion
 
-        #region
+        #region Rest
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
         [Category("- Rest")]
@@ -135,7 +135,7 @@ namespace IWantMovement.Settings
         [Setting]
         [Styx.Helpers.DefaultValue(true)]
         [Category("Pull Behavior")]
-        [DisplayName("Force Combat")]
+        [DisplayName("Force Combat (Pull)")]
         [Description("Will override the combat routines pull behavior.")]
         public bool ForceCombat { get; set; }
         

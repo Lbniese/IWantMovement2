@@ -108,10 +108,17 @@ namespace IWantMovement
 
             if (Targeting.Instance == _thisTargetMethod && Settings.EnableTargeting && !Me.GotTarget && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
-                if (!Me.GotTarget) 
-                { Target.AquireTarget(); }
-                else 
-                { Target.ClearTarget(); }
+                if (!Me.GotTarget)
+                {
+                    Target.AquireTarget();
+                }
+                
+            }
+
+            if (Me.GotTarget)
+            {
+                // Clear dead targets
+                Target.ClearTarget();
             }
 
             if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50 && !Me.HasAura("Food") && !Me.HasAura("Drink"))
@@ -121,7 +128,7 @@ namespace IWantMovement
                     _facingLast = DateTime.UtcNow;
             }
 
-            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink")) { Movement.Move(); }
+            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && Me.IsActuallyInCombat) { Movement.Move(); }
 
             _pluginThrottle = DateTime.UtcNow;
             

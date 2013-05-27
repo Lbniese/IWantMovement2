@@ -100,12 +100,12 @@ namespace IWantMovement.Managers
 
         private static bool NeedToMove()
         {
-            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance)   /* && !Me.IsMoving*/;
+            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance || !Me.CurrentTarget.InLineOfSpellSight)   /* && !Me.IsMoving*/;
         }
 
         private static bool NeedToStop()
         {
-           if (Me.CurrentTarget != null && (!Me.IsMelee() && Me.CurrentTarget.Distance <= StopDistance || Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
+           if (Me.CurrentTarget != null && (!Me.IsMelee() && (Me.CurrentTarget.Distance <= StopDistance && Me.CurrentTarget.InLineOfSpellSight) || Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
            {
                return true;
            }

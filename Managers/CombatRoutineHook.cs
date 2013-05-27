@@ -70,8 +70,8 @@ namespace IWantMovement.Managers
         public void PullBuff() { _undecoratedCR.PullBuff(); }
         public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); } // Hook into pull behavior
 
-        public Composite IwmPullBehavior() { return CreatePullBehavior; }
-        public Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
+        private Composite IwmPullBehavior() { return CreatePullBehavior; }
+        private Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
         #endregion
 
         readonly ICombatRoutine _undecoratedCR;
@@ -99,10 +99,12 @@ namespace IWantMovement.Managers
             RoutineManager.Current = _undecoratedCR;
         }
 
-        public Composite CreatePullBehavior
+        private Composite CreatePullBehavior
         {
             get
             {
+                Movement.Move();
+
                 if (!Settings.ForceCombat)
                 {
                     Log.Info("[Pull Called - Preventing] [Reason: Setting Disabled]");
@@ -110,6 +112,7 @@ namespace IWantMovement.Managers
                 }
 
                 if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
+
 
                 switch (StyxWoW.Me.Class)
                 {
