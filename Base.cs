@@ -99,7 +99,7 @@ namespace IWantMovement
                 RoutineManager.Current = _decoratedCombatRoutine;
                 Log.Info("Combat Routine Hook Installed!");
             }
-
+            
             if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
                 Log.Warning("Taking control of targeting. If this message is being spammed, something else is trying to take control.");
