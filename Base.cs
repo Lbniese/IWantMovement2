@@ -82,7 +82,7 @@ namespace IWantMovement
             Log.Info("Disabled IWantMovement");
             base.Dispose();
         }
-
+        
         public override void Pulse()
         {
             if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 

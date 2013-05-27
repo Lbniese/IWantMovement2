@@ -125,7 +125,7 @@ namespace IWantMovement.Managers
             //Log.Debug("[Need To Stop:{0}] [Need To Move:{1}] [Can Move:{2}]", NeedToStop(), NeedToMove(), CanMove());
 
             // Check if we're close enough.
-            if (NeedToStop()) WoWMovement.MoveStop();
+            if (NeedToStop() && !Me.IsActuallyInCombat) WoWMovement.MoveStop();
 
             // Check if we need to move
             if (!MoveBehindTarget && NeedToMove() && CanMove())
