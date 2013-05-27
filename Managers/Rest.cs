@@ -54,28 +54,29 @@ namespace IWantMovement.Managers
                 // Check if we're allowed to eat (and make sure we have some food. Don't bother going further if we have none.
                         new Decorator(
                             ret =>
-                            !StyxWoW.Me.IsSwimming && StyxWoW.Me.HealthPercent <= 60 && !StyxWoW.Me.HasAura("Food") &&
-                            Consumable.GetBestFood(Settings.AllowSpecialFood) != null && !StyxWoW.Me.IsCasting,
+                            !StyxWoW.Me.IsSwimming && StyxWoW.Me.HealthPercent <= IWMSettings.Instance.EatPercent && !StyxWoW.Me.HasAura("Food") &&
+                            Consumable.GetBestFood(true) != null && !StyxWoW.Me.IsCasting,
                             new PrioritySelector(
                                 new Decorator(
                                     ret => StyxWoW.Me.IsMoving,
                                     new Action(ret => Navigator.PlayerMover.MoveStop())),
                                 new Sequence(
-                                    new Action(
-                                        ret => Styx.CommonBot.Rest.FeedImmediate()),
+                                    new Action(ret => Log.Info("[Rest] [Eating]")),
+                                    new Action(ret => Styx.CommonBot.Rest.FeedImmediate()),
                                     CreateWaitForLagDuration()))),
 
                 // Make sure we're a class with mana, if not, just ignore drinking all together! Other than that... same for food.
                         new Decorator(
                             ret =>
                             !StyxWoW.Me.IsSwimming && (StyxWoW.Me.PowerType == WoWPowerType.Mana) &&
-                            StyxWoW.Me.ManaPercent <= 60 &&
-                            !StyxWoW.Me.HasAura("Drink") && Consumable.GetBestDrink(Settings.AllowSpecialFood) != null && !StyxWoW.Me.IsCasting,
+                            StyxWoW.Me.ManaPercent <= IWMSettings.Instance.DrinkPercent &&
+                            !StyxWoW.Me.HasAura("Drink") && Consumable.GetBestDrink(true) != null && !StyxWoW.Me.IsCasting,
                             new PrioritySelector(
                                 new Decorator(
                                     ret => StyxWoW.Me.IsMoving,
                                     new Action(ret => Navigator.PlayerMover.MoveStop())),
                                 new Sequence(
+                                    new Action(ret => Log.Info("[Rest] [Drinking]")),
                                     new Action(ret => Styx.CommonBot.Rest.DrinkImmediate()),
                                     CreateWaitForLagDuration()))),
 
@@ -89,7 +90,7 @@ namespace IWantMovement.Managers
                             ret =>
                             ((StyxWoW.Me.PowerType == WoWPowerType.Mana && StyxWoW.Me.ManaPercent <= 60) ||
                              StyxWoW.Me.HealthPercent <= 60) && !StyxWoW.Me.CurrentMap.IsBattleground,
-                            new Action(ret => Log.Info("We have no food/drink. Waiting to recover our health/mana back")))
+                            new Action(ret => Log.Warning("We have no food/drink. Waiting to recover our health/mana back")))
                     ));
         }
 

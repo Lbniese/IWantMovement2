@@ -31,7 +31,7 @@ namespace IWantMovement
         Targeting _previousTargetMethod;
         Targeting _thisTargetMethod;
 
-        internal static LocalPlayer Me { get { return StyxWoW.Me; } }
+        private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
         private DateTime _facingLast;
@@ -119,7 +119,7 @@ namespace IWantMovement
             {
                 // Clear dead targets
                 Target.ClearTarget();
-            }
+            } 
 
             if (Settings.EnableFacing && (DateTime.UtcNow > _facingLast.AddMilliseconds(Settings.FacingThrottleTime)) && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50 && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {

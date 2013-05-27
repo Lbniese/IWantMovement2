@@ -122,12 +122,19 @@ namespace IWantMovement.Settings
         public bool EnableRest { get; set; }
 
         [Setting]
-        [Styx.Helpers.DefaultValue(true)]
+        [Styx.Helpers.DefaultValue(80)]
         [Category("- Rest")]
-        [DisplayName("Allow Special Foods/Drinks")]
-        [Description("Will allow the routine to use special foods (such as those that give stat buffs when eaten).")]
-        public bool AllowSpecialFood { get; set; }
+        [DisplayName("Eat Health Percent")]
+        [Description("HP percentage before eating food")]
+        public int EatPercent { get; set; }
 
+        [Setting]
+        [Styx.Helpers.DefaultValue(60)]
+        [Category("- Rest")]
+        [DisplayName("Drink Health Percent")]
+        [Description("HP percentage before drinking")]
+        public int DrinkPercent { get; set; }
+        
         #endregion
 
         #region Pull Behavior

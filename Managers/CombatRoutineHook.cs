@@ -55,7 +55,7 @@ namespace IWantMovement.Managers
         public bool NeedDeath { get { return _undecoratedCR.NeedDeath; } }
         public bool NeedHeal { get { return _undecoratedCR.NeedHeal; } }
         public bool NeedCombatBuffs { get { return _undecoratedCR.NeedCombatBuffs; } }
-        public bool NeedRest { get { return Me.HealthPercent <= 80 || (Me.PowerType == WoWPowerType.Mana && Me.ManaPercent <= 60); } }
+        public bool NeedRest { get { return Me.HealthPercent <= IWMSettings.Instance.EatPercent || (Me.PowerType == WoWPowerType.Mana && Me.ManaPercent <= IWMSettings.Instance.DrinkPercent); } }
         public bool NeedPullBuffs { get { return _undecoratedCR.NeedPullBuffs; } }
         public bool NeedPreCombatBuffs { get { return _undecoratedCR.NeedPreCombatBuffs; } }
 
