@@ -131,7 +131,7 @@ namespace IWantMovement.Settings
         [Setting]
         [Styx.Helpers.DefaultValue(60)]
         [Category("- Rest")]
-        [DisplayName("Drink Health Percent")]
+        [DisplayName("Drink Mana Percent")]
         [Description("HP percentage before drinking")]
         public int DrinkPercent { get; set; }
         
