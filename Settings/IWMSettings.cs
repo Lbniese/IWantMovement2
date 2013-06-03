@@ -101,6 +101,13 @@ namespace IWantMovement.Settings
         public bool EnableTargeting { get; set; }
 
         [Setting]
+        [Styx.Helpers.DefaultValue(true)]
+        [Category("- Targeting")]
+        [DisplayName("Clear target when combat with other unit")]
+        [Description("Will clear the target if we're in combat, but the unit we're in combat with isn't targeting us or a member of our group.")]
+        public bool ClearTargetIfNotTargetingGroup { get; set; }
+
+        [Setting]
         [Styx.Helpers.DefaultValue(5000)]
         [Category("- Targeting")]
         [DisplayName("Throttle Time")]

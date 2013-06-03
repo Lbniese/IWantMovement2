@@ -86,7 +86,7 @@ namespace IWantMovement
         public override void Pulse()
         {
             if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
-                || Me.IsDead 
+                || Me.IsDead  
                 || Me.IsFlying 
                 || Me.IsOnTransport
                 || Me.Mounted) { return; } 

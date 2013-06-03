@@ -122,12 +122,18 @@ namespace IWantMovement.Managers
                 Me.ClearTarget();
             }
 
-            if ((Me.Combat || (Me.GotAlivePet && Me.PetInCombat)) && !Me.CurrentTarget.IsDead && (!Me.CurrentTarget.IsTargetingMeOrPet && !Me.CurrentTarget.IsTargetingMyPartyMember && !Me.CurrentTarget.IsTargetingMyRaidMember))
+            if (Settings.IWMSettings.Instance.ClearTargetIfNotTargetingGroup && (Me.Combat || Me.PetInCombat) && !Me.CurrentTarget.IsDead && !IsTargetingUs(Me.CurrentTarget))
             {
-                Log.Info("[Clearing {0}] [Reason: Combat with unit other than target]", Me.CurrentTarget.Name);
+                Log.Info("[Clearing {0}] [Reason: In combat - target isn't targeting us or group member]", Me.CurrentTarget.Name);
                 Me.ClearTarget();
             }
 
+        }
+
+        private static bool IsTargetingUs(WoWUnit unit)
+        {
+            return unit.IsTargetingAnyMinion || unit.IsTargetingMeOrPet || unit.IsTargetingMyPartyMember ||
+                   unit.IsTargetingMyRaidMember;
         }
 
         #region Core Unit Checks
