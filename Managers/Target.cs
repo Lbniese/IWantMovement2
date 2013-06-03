@@ -132,8 +132,9 @@ namespace IWantMovement.Managers
 
         private static bool IsTargetingUs(WoWUnit unit)
         {
-            return unit.IsTargetingAnyMinion || unit.IsTargetingMeOrPet || unit.IsTargetingMyPartyMember ||
-                   unit.IsTargetingMyRaidMember;
+            return unit.GotTarget && (
+                unit.IsTargetingAnyMinion || unit.IsTargetingMeOrPet || unit.IsTargetingMyPartyMember ||
+                   unit.IsTargetingMyRaidMember);
         }
 
         #region Core Unit Checks

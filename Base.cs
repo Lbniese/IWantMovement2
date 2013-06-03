@@ -88,7 +88,7 @@ namespace IWantMovement
             if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
                 || Me.IsDead  
                 || Me.IsFlying 
-                || Me.IsOnTransport
+                || Me.IsOnTransport 
                 || Me.Mounted) { return; } 
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
