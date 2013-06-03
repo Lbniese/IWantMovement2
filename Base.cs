@@ -128,7 +128,7 @@ namespace IWantMovement
                     _facingLast = DateTime.UtcNow;
             }
 
-            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && Me.IsActuallyInCombat) { Movement.Move(); }
+            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && (Me.Combat || Me.PetInCombat)) { Movement.Move(); }
 
             _pluginThrottle = DateTime.UtcNow;
             
