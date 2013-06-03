@@ -37,7 +37,7 @@ namespace IWantMovement.Settings
         {
             get
             {
-                return string.Format("{0}\\Settings\\IWantMovement\\Settings_{1}", Utilities.AssemblyDirectory,
+                return string.Format("{0}\\Settings\\IWantMovement\\Settings_{1}_2", Utilities.AssemblyDirectory,
                                      Me.Name);
             }
         }
@@ -71,12 +71,14 @@ namespace IWantMovement.Settings
         [Description("Attempt to move behind the target (i.e. for melee classes)")]
         public bool MoveBehindTarget { get; set; }
 
+        /*
         [Setting]
         [Styx.Helpers.DefaultValue(1000)]
         [Category("- Movement")]
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
-        public int MovementThrottleTime { get; set; }
+         */
+        public int MovementThrottleTime = 500;
 
         #endregion Movement
 
@@ -87,13 +89,6 @@ namespace IWantMovement.Settings
         [DisplayName("Enable Facing")]
         [Description("Allow IWM to handle facing target")]
         public bool EnableFacing { get; set; }
-
-        [Setting]
-        [Styx.Helpers.DefaultValue(1000)]
-        [Category("- Facing")]
-        [DisplayName("Throttle Time")]
-        [Description("Duration in milliseconds to wait between re-attempting action.")]
-        public int FacingThrottleTime { get; set; }
 
         #endregion Facing
 
@@ -139,12 +134,15 @@ namespace IWantMovement.Settings
 
         #region Pull Behavior
 
+        /*
         [Setting]
         [Styx.Helpers.DefaultValue(true)]
         [Category("Pull Behavior")]
         [DisplayName("Force Combat (Pull)")]
         [Description("Will override the combat routines pull behavior.")]
         public bool ForceCombat { get; set; }
+         */
+        public const bool ForceCombat = true;
         
         [Setting]
         [Styx.Helpers.DefaultValue("Death Grip")]
@@ -166,20 +164,6 @@ namespace IWantMovement.Settings
         [DisplayName("Pull Ability: Paladin")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpellPaladin { get; set; }
-
-        [Setting]
-        [Styx.Helpers.DefaultValue("Shadow Bolt")]
-        [Category("Pull Behavior")]
-        [DisplayName("Pull Ability: Warlock")]
-        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
-        public string PullSpellWarlock { get; set; }
-
-        [Setting]
-        [Styx.Helpers.DefaultValue("Frostbolt")]
-        [Category("Pull Behavior")]
-        [DisplayName("Pull Ability: Mage")]
-        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
-        public string PullSpellMage { get; set; }
 
         [Setting]
         [Styx.Helpers.DefaultValue("Shadow Word: Pain")]
@@ -216,12 +200,6 @@ namespace IWantMovement.Settings
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpellDruid { get; set; }
 
-        [Setting]
-        [Styx.Helpers.DefaultValue("Charge")]
-        [Category("Pull Behavior")]
-        [DisplayName("Pull Ability: Warrior")]
-        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
-        public string PullSpellWarrior { get; set; }
         #endregion
     }
 }

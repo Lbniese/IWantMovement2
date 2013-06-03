@@ -19,16 +19,17 @@ using Styx.CommonBot;
 using Styx.WoWInternals;
 using Styx.WoWInternals.DBC;
 using Styx.WoWInternals.WoWObjects;
+using Styx.CommonBot.POI;
 
 namespace IWantMovement.Managers
 {
     class Target : Targeting
     {
-        public static LocalPlayer Me { get { return StyxWoW.Me; } }
+        private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private readonly static Map Map = Me.CurrentMap;
         private static DateTime _targetLast;
 
-        public static bool WantTarget()
+        private static bool WantTarget()
         {
             return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime)) 
                 && !Me.GotTarget 
@@ -102,18 +103,18 @@ namespace IWantMovement.Managers
         public static void ClearTarget()
         {
             if (Me.CurrentTarget == null) { return; } 
-
-            if (Me.CurrentTarget.IsDead)
+            
+            if (Me.CurrentTarget.IsDead && !Me.Looting && BotPoi.Current.Type != PoiType.Loot) 
             {
                 Log.Info("[Clearing {0}] [Reason: Dead]", Me.CurrentTarget.Name);
                 Me.ClearTarget();
             }
 
-            if (!Me.CurrentTarget.IsTargetingMeOrPet && Me.CurrentTarget.Distance > 70)
-            {
-                Log.Info("[Clearing {0}] [Reason: Long Distance: {1}]", Me.CurrentTarget.Name, Me.CurrentTarget.Distance);
-                Me.ClearTarget();
-            }
+            //if (!Me.CurrentTarget.IsTargetingMeOrPet && Me.CurrentTarget.Distance > 70)
+            //{
+            //    Log.Info("[Clearing {0}] [Reason: Long Distance: {1}]", Me.CurrentTarget.Name, Me.CurrentTarget.Distance);
+            //    Me.ClearTarget();
+            //}
 
             if (!Me.CurrentTarget.Attackable && (!Me.CurrentTarget.IsHostile || (Me.CurrentTarget.IsFriendly && Me.CurrentTarget.IsPlayer)))
             {
@@ -121,7 +122,7 @@ namespace IWantMovement.Managers
                 Me.ClearTarget();
             }
 
-            if ((Me.IsActuallyInCombat || (Me.GotAlivePet && Me.Pet.PetInCombat)) && (!Me.CurrentTarget.IsTargetingMeOrPet && !Me.CurrentTarget.IsTargetingMyPartyMember && !Me.CurrentTarget.IsTargetingMyRaidMember))
+            if ((Me.Combat || (Me.GotAlivePet && Me.PetInCombat)) && !Me.CurrentTarget.IsDead && (!Me.CurrentTarget.IsTargetingMeOrPet && !Me.CurrentTarget.IsTargetingMyPartyMember && !Me.CurrentTarget.IsTargetingMyRaidMember))
             {
                 Log.Info("[Clearing {0}] [Reason: Combat with unit other than target]", Me.CurrentTarget.Name);
                 Me.ClearTarget();

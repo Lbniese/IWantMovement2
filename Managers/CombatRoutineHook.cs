@@ -19,6 +19,7 @@ using Styx.CommonBot;
 using Styx.CommonBot.Routines;
 using Styx.TreeSharp;
 using Styx.WoWInternals.WoWObjects;
+using Action = Styx.TreeSharp.Action;
 
 namespace IWantMovement.Managers
 {
@@ -29,6 +30,11 @@ namespace IWantMovement.Managers
         
         //internal static bool EnablePullSpells = true;
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
+
+        private delegate T Selection<out T>(object context);
+        private delegate WoWUnit UnitSelectionDelegate(object context);
+        public delegate WoWPoint LocationRetriever(object context);
+        private static WoWUnit Target { get { return Me.CurrentTarget; } }
 
         #region CR Overrides
         public string Name { get { return _undecoratedCR.Name; } }
@@ -105,14 +111,15 @@ namespace IWantMovement.Managers
             {
                 Movement.Move();
 
+                /*
                 if (!Settings.ForceCombat)
                 {
                     Log.Info("[Pull Called - Preventing] [Reason: Setting Disabled]");
                     return new ActionAlwaysSucceed();
                 }
+                */
 
                 if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
-
 
                 switch (StyxWoW.Me.Class)
                 {
@@ -135,17 +142,29 @@ namespace IWantMovement.Managers
                         Cast(Settings.PullSpellShaman);
                         break;
                     case WoWClass.Mage:
-                        Cast(Settings.PullSpellMage);
-                        break;
+                        return new PrioritySelector(
+                            Cast("Frostbolt", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
+                            Cast("Fireball", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
+                            Cast("Arcane Blast", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40)
+                            );
                     case WoWClass.DeathKnight:
                         Cast(Settings.PullSpellDeathKnight);
                         break;
                     case WoWClass.Warlock:
-                        Cast(Settings.PullSpellWarlock);
-                        break;
+                        return new PrioritySelector(
+                            Cast("Shadow Bolt", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
+                            Cast("Incinerate", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
+                            Cast("Immolate", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
+                            Cast("Corruption", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40)
+                            );
                     case WoWClass.Warrior:
-                        Cast(Settings.PullSpellWarrior);
-                        break;
+                        return new PrioritySelector(
+                            Cast("Charge", on => Target, ret => Target.Distance >= 8 && Target.Distance <= 25),
+                            Cast("Mortal Strike", on => Target, ret => Target.IsWithinMeleeRange),
+                            Cast("Bloodthirst", on => Target, ret => Target.IsWithinMeleeRange),
+                            Cast("Shield Slam", on => Target, ret => Target.IsWithinMeleeRange),
+                            Cast("Heroic Throw", on => Target, ret => Target.Distance <= 30 && Target.InLineOfSpellSight),
+                            Cast("Throw", on => Target, ret => !Me.IsMoving && Target.InLineOfSpellSight));
                     case WoWClass.Hunter:
                         Cast(Settings.PullSpellHunter);
                         break;
@@ -155,6 +174,48 @@ namespace IWantMovement.Managers
 
             }
         }
+
+        private static Composite Cast(string spell, UnitSelectionDelegate onUnit, Selection<bool> reqs = null)
+        {
+            return
+                new Decorator(
+                    ret => (onUnit != null && onUnit(ret) != null &&
+                        ((reqs != null && reqs(ret)) || (reqs == null)) &&
+                        SpellManager.CanCast(spell, onUnit(ret))),
+                    new Sequence(
+                        new Action(ret => SpellManager.Cast(spell, onUnit(ret))),
+                        new Action(ret => Log.Info(String.Format("[Casting:{0}] [Target:{1}] [Distance:{2:F1}yds]", spell, SafeName(onUnit(ret)), onUnit(ret).Distance)))
+                        ));
+        }
+
+        // Stolen from PureRotation!
+        private static string SafeName(WoWObject obj)
+        {
+            if (obj.IsMe)
+            {
+                return "Me";
+            }
+
+            string name;
+            var player = obj as WoWPlayer;
+            if (player != null)
+            {
+                if (RaFHelper.Leader == obj)
+                    return "Tank/Leader";
+
+                name = player.Class.ToString();
+            }
+            else if (obj is WoWUnit && obj.ToUnit().IsPet)
+            {
+                name = SafeName(obj.ToUnit().OwnedByRoot) + ":Pet";
+            }
+            else
+            {
+                name = obj.Name;
+            }
+            return name;
+        }
+
 
         private static void Cast(string spellName)
         {
