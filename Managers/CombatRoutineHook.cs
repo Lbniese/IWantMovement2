@@ -34,7 +34,6 @@ namespace IWantMovement.Managers
         private delegate T Selection<out T>(object context);
         private delegate WoWUnit UnitSelectionDelegate(object context);
         public delegate WoWPoint LocationRetriever(object context);
-        private static WoWUnit Target { get { return Me.CurrentTarget; } }
 
         #region CR Overrides
         public string Name { get { return _undecoratedCR.Name; } }
@@ -143,28 +142,28 @@ namespace IWantMovement.Managers
                         break;
                     case WoWClass.Mage:
                         return new PrioritySelector(
-                            Cast("Frostbolt", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
-                            Cast("Fireball", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
-                            Cast("Arcane Blast", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40)
+                            Cast("Frostbolt", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
+                            Cast("Fireball", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
+                            Cast("Arcane Blast", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40)
                             );
                     case WoWClass.DeathKnight:
                         Cast(Settings.PullSpellDeathKnight);
                         break;
                     case WoWClass.Warlock:
                         return new PrioritySelector(
-                            Cast("Shadow Bolt", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
-                            Cast("Incinerate", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
-                            Cast("Immolate", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40),
-                            Cast("Corruption", on => Target, ret => Target.InLineOfSpellSight && Target.Distance <= 40)
+                            Cast("Shadow Bolt", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
+                            Cast("Incinerate", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
+                            Cast("Immolate", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
+                            Cast("Corruption", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40)
                             );
                     case WoWClass.Warrior:
                         return new PrioritySelector(
-                            Cast("Charge", on => Target, ret => Target.Distance >= 8 && Target.Distance <= 25),
-                            Cast("Mortal Strike", on => Target, ret => Target.IsWithinMeleeRange),
-                            Cast("Bloodthirst", on => Target, ret => Target.IsWithinMeleeRange),
-                            Cast("Shield Slam", on => Target, ret => Target.IsWithinMeleeRange),
-                            Cast("Heroic Throw", on => Target, ret => Target.Distance <= 30 && Target.InLineOfSpellSight),
-                            Cast("Throw", on => Target, ret => !Me.IsMoving && Target.InLineOfSpellSight));
+                            Cast("Charge", on => Me.CurrentTarget, ret => Me.CurrentTarget.Distance >= 9 && Me.CurrentTarget.Distance <= 25),
+                            Cast("Mortal Strike", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
+                            Cast("Bloodthirst", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
+                            Cast("Shield Slam", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
+                            Cast("Heroic Throw", on => Me.CurrentTarget, ret => Me.CurrentTarget.Distance <= 30 && Me.CurrentTarget.InLineOfSpellSight),
+                            Cast("Throw", on => Me.CurrentTarget, ret => !Me.IsMoving && Me.CurrentTarget.InLineOfSpellSight));
                     case WoWClass.Hunter:
                         Cast(Settings.PullSpellHunter);
                         break;
