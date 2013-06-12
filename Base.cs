@@ -34,7 +34,7 @@ namespace IWantMovement
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
-        private DateTime _facingLast;
+        //private DateTime _facingLast;
         private DateTime _pluginThrottle;
 
         private static bool _initialized;

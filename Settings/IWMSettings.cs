@@ -49,7 +49,7 @@ namespace IWantMovement.Settings
         [DisplayName("Enable Movement")]
         [Description("Allow IWM to handle movement")]
         public bool EnableMovement { get; set; }
-
+        /*
         [Setting]
         [Styx.Helpers.DefaultValue(35)]
         [Category("- Movement")]
@@ -63,7 +63,7 @@ namespace IWantMovement.Settings
         [DisplayName("Stop Distance")]
         [Description("The distance from target before we should stop moving.")]
         public int StopDistance { get; set; }
-
+        */
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
         [Category("- Movement")]

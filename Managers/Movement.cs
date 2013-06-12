@@ -22,6 +22,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
+using System.Windows.Forms;
+using System.Windows.Input;
 using IWantMovement.Helper;
 using Styx;
 using Styx.Helpers;
@@ -35,16 +38,18 @@ namespace IWantMovement.Managers
     {
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
-        private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
-        private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
+        //private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
+        //private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
         public static bool ValidatedSettings = false;
         private static bool _displayWarning = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
         //public delegate WoWPoint LocationRetriever(object context);
         //public delegate float DynamicRangeRetriever(object context);
-        //private static float CombatMinDistance { get { return Me.IsMelee() ? 1f : 30f; } }
-        //private static float CombatMaxDistance { get { return Me.IsMelee() ? 3.2f : 40f; } }
+        private static int StopDistance { get { return Me.IsMelee() ? 1 : 33; } }
+        private static int MaxDistance { get { return Me.IsMelee() ? 3 : 35; } }
+        private static DateTime _movementSuspendedTime;
+        private static bool _movementSuspended;
 
         private static bool CanMove()
         {
@@ -113,16 +118,63 @@ namespace IWantMovement.Managers
             return false;
         }
 
+        #region Key States
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern short GetAsyncKeyState(int vkey);
+
+        static bool IsKeyDown(Keys key)
+        {
+            return (GetAsyncKeyState((int)key) & 0x8000) != 0;
+        }
+
+        private static bool UserIsMoving()
+        {
+            return  IsKeyDown(Keys.A) || 
+                    IsKeyDown(Keys.S) || 
+                    IsKeyDown(Keys.D) || 
+                    IsKeyDown(Keys.W) || 
+                    IsKeyDown(Keys.Q) ||
+                    IsKeyDown(Keys.E);
+        }
+
+        #endregion
+
+        private static void SuspendMovement()
+        {
+            
+            if (UserIsMoving())
+            {
+                if (!_movementSuspended)
+                {
+                    Log.Warning("Suspending movement, user in control");
+                }
+                _movementSuspended = true;
+                _movementSuspendedTime = DateTime.UtcNow;
+            }
+            
+            if (_movementSuspended && !UserIsMoving() && _movementSuspendedTime.AddMilliseconds(3000) > DateTime.UtcNow)
+            {
+                if (_movementSuspended)
+                {
+                    Log.Info("Taking control of movement");
+                }
+                _movementSuspended = false;
+
+            }
+
+        }
+
         public static void Move()
         {
             
             // Check we don't have bad settings
-            ValidateSettings();
+            //ValidateSettings();
+
+            // Check if we want to allow movement.
+            SuspendMovement();
 
             // If we don't have a target to move to
-            if (Me.CurrentTarget == null) return;
-
-            //Log.Debug("[Need To Stop:{0}] [Need To Move:{1}] [Can Move:{2}]", NeedToStop(), NeedToMove(), CanMove());
+            if (Me.CurrentTarget == null || _movementSuspended) return;
 
             // Check if we're close enough.
             if (NeedToStop() && CanMove()) WoWMovement.MoveStop();
@@ -132,13 +184,14 @@ namespace IWantMovement.Managers
             {
                 Log.Info("Moving to current target at {0}", Me.CurrentTarget.Location);
                 _movementLast = DateTime.UtcNow;
+
                 Navigator.MoveTo(Me.CurrentTarget.Location);
             }
 
             // Check if need to move, and want to be behind our target.
             if (MoveBehindTarget && NeedToMove() && CanMove())
             {
-                Log.Info("Moving behind target at {0}", Me.CurrentTarget.Location);
+                Log.Info("Moving BEHIND target at {0}", Me.CurrentTarget.Location);
                 _movementLast = DateTime.UtcNow;
                 Navigator.MoveTo(PointBehindTarget());
             }

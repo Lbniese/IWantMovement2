@@ -142,6 +142,7 @@ namespace IWantMovement.Managers
                         break;
                     case WoWClass.Mage:
                         return new PrioritySelector(
+                            //Cast("Ice Lance", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight),
                             Cast("Frostbolt", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
                             Cast("Fireball", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
                             Cast("Arcane Blast", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40)
