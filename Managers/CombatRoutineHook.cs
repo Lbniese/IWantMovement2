@@ -109,16 +109,25 @@ namespace IWantMovement.Managers
             get
             {
                 Movement.Move();
-
-                /*
-                if (!Settings.ForceCombat)
-                {
-                    Log.Info("[Pull Called - Preventing] [Reason: Setting Disabled]");
-                    return new ActionAlwaysSucceed();
-                }
-                */
-
+                
+                
                 if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
+
+                if (!Me.HasAura(Settings.PullSpell1))
+                {
+                    Cast(Settings.PullSpell1);
+                }
+
+                if (!Me.HasAura(Settings.PullSpell2))
+                {
+                    Cast(Settings.PullSpell2);
+                }
+
+                if (!Me.HasAura(Settings.PullSpell3))
+                {
+                    Cast(Settings.PullSpell3);
+                }
+
                 /*
                 switch (StyxWoW.Me.Class)
                 {
@@ -170,12 +179,24 @@ namespace IWantMovement.Managers
                         break;
                 }
                 */
-                return new Decorator(ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight,
+                return 
                     new PrioritySelector(
-                        Cast(Settings.PullSpell1, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell1)),
-                        Cast(Settings.PullSpell2, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell2)),
-                        Cast(Settings.PullSpell3, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell3))
-                    ));
+                        /*new Action(delegate
+                            {
+                                Movement.Move();
+
+                                if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling)
+                                {
+                                    Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name);
+                                }
+
+                                return RunStatus.Failure;
+                            }),
+                        Cast(Settings.PullSpell1, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell1)),
+                        Cast(Settings.PullSpell2, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell2)),
+                        Cast(Settings.PullSpell3, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell3))
+                    
+                         */ );
 
             }
         }

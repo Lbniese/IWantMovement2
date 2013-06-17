@@ -80,7 +80,7 @@ namespace IWantMovement
             Targeting.Instance = _previousTargetMethod;
             RoutineManager.Current = _undecoratedCombatRoutine;
             Log.Info("Disabled IWantMovement");
-            base.Dispose();
+            base.Dispose(); 
         }
         
         public override void Pulse()
