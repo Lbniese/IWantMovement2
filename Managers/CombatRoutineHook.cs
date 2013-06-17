@@ -119,7 +119,7 @@ namespace IWantMovement.Managers
                 */
 
                 if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
-
+                /*
                 switch (StyxWoW.Me.Class)
                 {
                     case WoWClass.Paladin:
@@ -169,8 +169,13 @@ namespace IWantMovement.Managers
                         Cast(Settings.PullSpellHunter);
                         break;
                 }
-
-                return new PrioritySelector();
+                */
+                return new Decorator(ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight,
+                    new PrioritySelector(
+                        Cast(Settings.PullSpell1, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell1)),
+                        Cast(Settings.PullSpell2, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell2)),
+                        Cast(Settings.PullSpell3, on => Me.CurrentTarget, ret => !Me.HasAura(Settings.PullSpell3))
+                    ));
 
             }
         }
@@ -181,7 +186,7 @@ namespace IWantMovement.Managers
                 new Decorator(
                     ret => (onUnit != null && onUnit(ret) != null &&
                         ((reqs != null && reqs(ret)) || (reqs == null)) &&
-                        SpellManager.CanCast(spell, onUnit(ret))),
+                        SpellManager.CanCast(spell, onUnit(ret), true)),
                     new Sequence(
                         new Action(ret => SpellManager.Cast(spell, onUnit(ret))),
                         new Action(ret => Log.Info(String.Format("[Casting:{0}] [Target:{1}] [Distance:{2:F1}yds]", spell, SafeName(onUnit(ret)), onUnit(ret).Distance)))

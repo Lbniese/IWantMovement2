@@ -58,7 +58,7 @@ namespace IWantMovement
 
         public override void Initialize()
         {
-            if (!_initialized) // prevent init twice.
+            if (!_initialized) // prevent init twice. 
             {
                 Log.Info("Storing current targeting instance.");
                 _previousTargetMethod = Targeting.Instance;

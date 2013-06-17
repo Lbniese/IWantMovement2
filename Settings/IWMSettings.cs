@@ -150,7 +150,7 @@ namespace IWantMovement.Settings
         public bool ForceCombat { get; set; }
          */
         public const bool ForceCombat = true;
-        
+        /*
         [Setting]
         [Styx.Helpers.DefaultValue("Death Grip")]
         [Category("Pull Behavior")]
@@ -206,6 +206,29 @@ namespace IWantMovement.Settings
         [DisplayName("Pull Ability: Druid")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpellDruid { get; set; }
+        */
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Stealth")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability 1")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpell1 { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Cheap Shot")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability 2")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpell2 { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue("Sinister Strike")]
+        [Category("Pull Behavior")]
+        [DisplayName("Pull Ability 3")]
+        [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
+        public string PullSpell3 { get; set; }
+
 
         #endregion
     }
