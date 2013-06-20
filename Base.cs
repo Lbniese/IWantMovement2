@@ -121,13 +121,15 @@ namespace IWantMovement
                 Target.ClearTarget();
             } 
              
-            if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50 && !Me.HasAura("Food") && !Me.HasAura("Drink"))
+            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && (Me.Combat || Me.PetInCombat))
             {
+                if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
+                {
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
+                }
+                Movement.Move();
             }
-
-            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && (Me.Combat || Me.PetInCombat)) { Movement.Move(); }
 
             _pluginThrottle = DateTime.UtcNow;
             
