@@ -24,7 +24,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using System.Windows.Input;
 using IWantMovement.Helper;
 using Styx;
 using Styx.Helpers;
@@ -40,14 +39,14 @@ namespace IWantMovement.Managers
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
         //private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
         //private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
-        public static bool ValidatedSettings = false;
-        private static bool _displayWarning = false;
+        //public static bool ValidatedSettings = false;
+        //private static bool _displayWarning = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
         //public delegate WoWPoint LocationRetriever(object context);
         //public delegate float DynamicRangeRetriever(object context);
-        private static int StopDistance { get { return Me.IsMelee() ? 1 : 33; } }
-        private static int MaxDistance { get { return Me.IsMelee() ? 3 : 35; } }
+        private static float StopDistance { get { return Me.IsMelee() ? 1f : 33f; } }
+        private static float MaxDistance { get { return Me.IsMelee() ? MeleeRange : 35f; } }
         private static DateTime _movementSuspendedTime;
         private static bool _movementSuspended;
 
@@ -62,6 +61,7 @@ namespace IWantMovement.Managers
                 && !Me.IsOnTransport;
         }
 
+        /*
         private static void ValidateSettings()
         {
             if (!ValidatedSettings)
@@ -101,7 +101,7 @@ namespace IWantMovement.Managers
                 ValidatedSettings = true;
 
             }
-        }
+        }*/
 
         private static bool NeedToMove()
         {
@@ -141,7 +141,8 @@ namespace IWantMovement.Managers
 
         private static void SuspendMovement()
         {
-            
+            if (!Settings.IWMSettings.Instance.AllowSuspendMovement) {return;}
+
             if (UserIsMoving())
             {
                 if (!_movementSuspended)
@@ -152,7 +153,7 @@ namespace IWantMovement.Managers
                 _movementSuspendedTime = DateTime.UtcNow;
             }
             
-            if (_movementSuspended && !UserIsMoving() && _movementSuspendedTime.AddMilliseconds(3000) > DateTime.UtcNow)
+            if (_movementSuspended && !UserIsMoving() && DateTime.UtcNow > _movementSuspendedTime.AddMilliseconds(Settings.IWMSettings.Instance.SuspendDuration))
             {
                 if (_movementSuspended)
                 {
@@ -276,7 +277,7 @@ namespace IWantMovement.Managers
                 // If we have no target... then give nothing.
                 // if (StyxWoW.Me.CurrentTargetGuid == 0)  // chg to GotTarget due to non-zero vals with no target in Guid
                 if (!StyxWoW.Me.GotTarget)
-                    return 0f;
+                    return 3.5f;
 
                 if (StyxWoW.Me.CurrentTarget.IsPlayer)
                     return 3.5f;

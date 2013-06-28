@@ -78,6 +78,21 @@ namespace IWantMovement.Settings
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
          */
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(true)]
+        [Category("- Movement")]
+        [DisplayName("Allow Suspending Movement")]
+        [Description("Suspends movements on keypress Q/W/E/A/S/D")]
+        public bool AllowSuspendMovement { get; set; }
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(3000)]
+        [Category("- Movement")]
+        [DisplayName("Suspend Duration (ms)")]
+        [Description("Duration in milliseconds to wait after keypress before activating movement.")]
+        public int SuspendDuration { get; set; }
+
         public int MovementThrottleTime = 500;
 
         #endregion Movement

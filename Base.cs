@@ -83,7 +83,7 @@ namespace IWantMovement
             base.Dispose(); 
         }
         
-        public override void Pulse()
+        public override void Pulse() 
         {
             if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
                 || Me.IsDead  
