@@ -116,11 +116,12 @@ namespace IWantMovement.Managers
             //    Me.ClearTarget();
             //}
 
+            /*
             if (!Me.CurrentTarget.Attackable && (!Me.CurrentTarget.IsHostile || (Me.CurrentTarget.IsFriendly && Me.CurrentTarget.IsPlayer)))
             {
                 Log.Info("[Clearing {0}] [Reason: Target Not Hostile]", Me.CurrentTarget.Name);
                 Me.ClearTarget();
-            }
+            }*/
 
             if (Settings.IWMSettings.Instance.ClearTargetIfNotTargetingGroup && (Me.Combat || Me.PetInCombat) && !Me.CurrentTarget.IsDead && !IsTargetingUs(Me.CurrentTarget))
             {

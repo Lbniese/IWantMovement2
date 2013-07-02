@@ -27,7 +27,7 @@ namespace IWantMovement
     internal class IWantMovement : HBPlugin
 // ReSharper restore InconsistentNaming
     {
-        private Form _gui;
+        private Form _gui; 
         Targeting _previousTargetMethod;
         Targeting _thisTargetMethod;
 
