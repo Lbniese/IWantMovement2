@@ -134,7 +134,12 @@ namespace IWantMovement.Managers
                     IsKeyDown(Keys.D) || 
                     IsKeyDown(Keys.W) || 
                     IsKeyDown(Keys.Q) ||
-                    IsKeyDown(Keys.E);
+                    IsKeyDown(Keys.E) ||
+                    IsKeyDown(Keys.Up) ||
+                    IsKeyDown(Keys.Down) ||
+                    IsKeyDown(Keys.Left) ||
+                    IsKeyDown(Keys.Right)
+                    ;
         }
 
         #endregion

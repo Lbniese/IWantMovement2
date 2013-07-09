@@ -36,7 +36,7 @@ namespace IWantMovement
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
         //private DateTime _facingLast;
         private DateTime _pluginThrottle;
-
+         
         private static bool _initialized;
 
         private ICombatRoutine _decoratedCombatRoutine;
