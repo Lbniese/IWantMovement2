@@ -95,6 +95,13 @@ namespace IWantMovement.Settings
 
         public int MovementThrottleTime = 500;
 
+        [Setting]
+        [Styx.Helpers.DefaultValue(true)]
+        [Category("- Movement")]
+        [DisplayName("Enable Auto Dismount")]
+        [Description("Enables the plugin to dismount when it believe we're stuck on the mount.")]
+        public bool EnableAutoDismount { get; set; }
+
         #endregion Movement
 
         #region Facing

@@ -14,6 +14,7 @@ using System;
 using System.Windows.Forms;
 using Styx;
 using Styx.CommonBot;
+using Styx.CommonBot.POI;
 using Styx.CommonBot.Routines;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
@@ -66,7 +67,6 @@ namespace IWantMovement
                 _thisTargetMethod = new Target();
 
                 Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-                Log.Info("Have you tried PureRotation yet? - http://tinyurl.com/purev2");
                 Log.Info("-- Millz");
                 _initialized = true;
            
@@ -88,8 +88,28 @@ namespace IWantMovement
             if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
                 || Me.IsDead  
                 || Me.IsFlying 
-                || Me.IsOnTransport 
-                || Me.Mounted) { return; } 
+                || Me.IsGhost
+                ) { return; }
+
+            if (Settings.EnableAutoDismount && BotManager.Current.Name != "Questing")
+            {
+                if (Me.Mounted &&
+                    ( /*(Me.Combat && !Me.IsMoving) ||*/
+                        (BotPoi.Current.Type == PoiType.Kill && BotPoi.Current.AsObject.Distance < 30) ||
+                        (Me.GotTarget && Me.CurrentTarget.Distance < 30 && !Me.CurrentTarget.IsFriendly)))
+                {
+                    Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                }
+            }
+            else
+            {
+                if (Me.Mounted && Me.Combat && !Me.IsMoving && Me.GotTarget && Me.CurrentTarget.Distance < 30 && !Me.CurrentTarget.IsFriendly)
+                {
+                    Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                }
+            }
+
+            if (Me.IsOnTransport || Me.Mounted) { return; }
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
             {

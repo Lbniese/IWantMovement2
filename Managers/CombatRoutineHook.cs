@@ -112,12 +112,12 @@ namespace IWantMovement.Managers
 
                 if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
                 {
-                    Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
+                    Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.SafeName, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
                 }
                 
                 
-                if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name); }
+                if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.SafeName); }
 
                 if (!Me.HasAura(Settings.PullSpell1))
                 {
@@ -134,75 +134,10 @@ namespace IWantMovement.Managers
                     Cast(Settings.PullSpell3);
                 }
 
-                /*
-                switch (StyxWoW.Me.Class)
-                {
-                    case WoWClass.Paladin:
-                        Cast(Settings.PullSpellPaladin);
-                        break;
-                    case WoWClass.Monk:
-                        Cast(Settings.PullSpellMonk);
-                        break;
-                    case WoWClass.Rogue:
-                        Cast(Settings.PullSpellRogue);
-                        break;
-                    case WoWClass.Priest:
-                        Cast(Settings.PullSpellPriest);
-                        break;
-                    case WoWClass.Druid:
-                        Cast(Settings.PullSpellDruid);
-                        break;
-                    case WoWClass.Shaman:
-                        Cast(Settings.PullSpellShaman);
-                        break;
-                    case WoWClass.Mage:
-                        return new PrioritySelector(
-                            //Cast("Ice Lance", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight),
-                            Cast("Frostbolt", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
-                            Cast("Fireball", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
-                            Cast("Arcane Blast", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40)
-                            );
-                    case WoWClass.DeathKnight:
-                        Cast(Settings.PullSpellDeathKnight);
-                        break;
-                    case WoWClass.Warlock:
-                        return new PrioritySelector(
-                            Cast("Shadow Bolt", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
-                            Cast("Incinerate", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
-                            Cast("Immolate", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40),
-                            Cast("Corruption", on => Me.CurrentTarget, ret => Me.CurrentTarget.InLineOfSpellSight && Me.CurrentTarget.Distance <= 40)
-                            );
-                    case WoWClass.Warrior:
-                        return new PrioritySelector(
-                            Cast("Charge", on => Me.CurrentTarget, ret => Me.CurrentTarget.Distance >= 9 && Me.CurrentTarget.Distance <= 25),
-                            Cast("Mortal Strike", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
-                            Cast("Bloodthirst", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
-                            Cast("Shield Slam", on => Me.CurrentTarget, ret => Me.CurrentTarget.IsWithinMeleeRange),
-                            Cast("Heroic Throw", on => Me.CurrentTarget, ret => Me.CurrentTarget.Distance <= 30 && Me.CurrentTarget.InLineOfSpellSight),
-                            Cast("Throw", on => Me.CurrentTarget, ret => !Me.IsMoving && Me.CurrentTarget.InLineOfSpellSight));
-                    case WoWClass.Hunter:
-                        Cast(Settings.PullSpellHunter);
-                        break;
-                }
-                */
+                //RoutineManager.Current.Combat();
+
                 return 
-                    new PrioritySelector(
-                        /*new Action(delegate
-                            {
-                                Movement.Move();
-
-                                if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling)
-                                {
-                                    Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.Name);
-                                }
-
-                                return RunStatus.Failure;
-                            }),
-                        Cast(Settings.PullSpell1, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell1)),
-                        Cast(Settings.PullSpell2, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell2)),
-                        Cast(Settings.PullSpell3, on => Me.CurrentTarget, ret => Me.CurrentTarget != null && Me.CurrentTarget.InLineOfSpellSight && !Me.HasAura(Settings.PullSpell3))
-                    
-                         */ );
+                    new PrioritySelector();
 
             }
         }
@@ -216,38 +151,9 @@ namespace IWantMovement.Managers
                         SpellManager.CanCast(spell, onUnit(ret), true)),
                     new Sequence(
                         new Action(ret => SpellManager.Cast(spell, onUnit(ret))),
-                        new Action(ret => Log.Info(String.Format("[Casting:{0}] [Target:{1}] [Distance:{2:F1}yds]", spell, SafeName(onUnit(ret)), onUnit(ret).Distance)))
+                        new Action(ret => Log.Info(String.Format("[Casting:{0}] [Target:{1}] [Distance:{2:F1}yds]", spell, onUnit(ret).SafeName, onUnit(ret).Distance)))
                         ));
         }
-
-        // Stolen from PureRotation!
-        private static string SafeName(WoWObject obj)
-        {
-            if (obj.IsMe)
-            {
-                return "Me";
-            }
-
-            string name;
-            var player = obj as WoWPlayer;
-            if (player != null)
-            {
-                if (RaFHelper.Leader == obj)
-                    return "Tank/Leader";
-
-                name = player.Class.ToString();
-            }
-            else if (obj is WoWUnit && obj.ToUnit().IsPet)
-            {
-                name = SafeName(obj.ToUnit().OwnedByRoot) + ":Pet";
-            }
-            else
-            {
-                name = obj.Name;
-            }
-            return name;
-        }
-
 
         private static void Cast(string spellName)
         {
@@ -255,17 +161,17 @@ namespace IWantMovement.Managers
             {
                 if (SpellManager.CanCast(spellName, StyxWoW.Me.CurrentTarget))
                 {
-                    Log.Info("[Casting: {0}] [Target: {1}] ", spellName, StyxWoW.Me.CurrentTarget);
+                    Log.Info("[Casting: {0}] [Target: {1}] ", spellName, StyxWoW.Me.CurrentTarget.SafeName);
                     var result = SpellManager.Cast(spellName);
 
                     if (!result)
                     {
-                        Log.Info("[Failed to Cast: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
+                        Log.Info("[Failed to Cast: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget.SafeName, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
                     }
                 }
                 {
                     if (!Me.IsCasting || !Me.IsChanneling)
-                        Log.Debug("[CanCast Failed for: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
+                        Log.Debug("[CanCast Failed for: {0}] [Target: {1}] [In LoS: {2}]", spellName, StyxWoW.Me.CurrentTarget.SafeName, StyxWoW.Me.CurrentTarget.InLineOfSpellSight);
                 }
             }
         }

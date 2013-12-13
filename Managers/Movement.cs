@@ -58,50 +58,10 @@ namespace IWantMovement.Managers
                 && !Me.HasAnyAura("Food", "Drink") 
                 && !Me.IsDead 
                 && !Me.IsFlying 
-                && !Me.IsOnTransport;
+                && !Me.IsOnTransport
+                && Me.CurrentTarget != null 
+                && !Me.CurrentTarget.IsDead;
         }
-
-        /*
-        private static void ValidateSettings()
-        {
-            if (!ValidatedSettings)
-            {
-                if (Me.IsMelee() && MaxDistance > 5f)
-                {
-                    _displayWarning = true;
-                    Log.Warning("Your max distance setting({0}) is too high for a melee class. Reduce it!", MaxDistance);
-                }
-
-                if (MaxDistance > 40)
-                {
-                    _displayWarning = true;
-                    Log.Warning("Max distance is {0}! This is very high for any class!", MaxDistance);
-                }
-                if (StopDistance < 2)
-                {
-                    _displayWarning = true;
-                    Log.Warning("Stop distance is {0}! This is very low for any class!", StopDistance);
-                }
-                if (StopDistance >= MaxDistance)
-                {
-                    _displayWarning = true;
-                    Log.Warning("Your stop distance [{0}] should be lower than max distance [{1}].", StopDistance, MaxDistance);
-                }
-
-                if (MaxDistance - StopDistance > 7)
-                {
-                    _displayWarning = true;
-                    Log.Warning("Your Max Distance [{0}] is much higher than your Stop Distance [{1}]. Consider lowering the difference between these 2 values.", MaxDistance, StopDistance);
-                }
-                if (_displayWarning)
-                {
-                    Log.Warning("This warning will not prevent the plugin from working, however it may not work as expected.");
-                }
-
-                ValidatedSettings = true;
-
-            }
-        }*/
 
         private static bool NeedToMove()
         {
