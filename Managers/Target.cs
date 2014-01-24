@@ -13,7 +13,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using IWantMovement.Helper;
 using Styx;
 using Styx.CommonBot;
 using Styx.WoWInternals;
@@ -60,7 +59,7 @@ namespace IWantMovement.Managers
                     if (unit != null) 
                     {
                         unit.Target();
-                        Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
+                        Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                         return;
                     }
                     
@@ -71,7 +70,7 @@ namespace IWantMovement.Managers
                 if (unit != null)
                 {
                     unit.Target();
-                    Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
+                    Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                     return;
                 }
                 
@@ -87,7 +86,7 @@ namespace IWantMovement.Managers
                     if (unit != null)
                     {
                         unit.Target();
-                        Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
+                        Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                         return;
                     }
                     
@@ -99,7 +98,7 @@ namespace IWantMovement.Managers
             if (unit != null)
             {
                 unit.Target();
-                Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
+                Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
             }
         }
 
@@ -109,13 +108,13 @@ namespace IWantMovement.Managers
             
             if (Me.CurrentTarget.IsDead && !Me.CurrentTarget.HasAura("Feign Death") && !Me.Looting && BotPoi.Current.Type != PoiType.Loot) 
             {
-                Log.Info("[Clearing {0}] [Reason: Dead]", Me.CurrentTarget.SafeName);
+                Helper.Log.Info("[Clearing {0}] [Reason: Dead]", Me.CurrentTarget.SafeName);
                 Me.ClearTarget();
             }
 
             if (Settings.IWMSettings.Instance.ClearTargetIfNotTargetingGroup && (Me.Combat || Me.PetInCombat) && !Me.CurrentTarget.IsDead && !IsTargetingUs(Me.CurrentTarget))
             {
-                Log.Info("[Clearing {0}] [Reason: In combat - target isn't targeting us or group member]", Me.CurrentTarget.SafeName);
+                Helper.Log.Info("[Clearing {0}] [Reason: In combat - target isn't targeting us or group member]", Me.CurrentTarget.SafeName);
                 Me.ClearTarget();
             }
 

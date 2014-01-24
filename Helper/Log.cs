@@ -15,7 +15,7 @@ using Styx.Common;
 
 namespace IWantMovement.Helper
 {
-    class Log
+    static class Log
     {
 
         public static void Info(string logText, params object[] args)
