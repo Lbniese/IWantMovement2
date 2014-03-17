@@ -85,8 +85,9 @@ namespace IWantMovement
         
         public override void Pulse() 
         {
-            if (DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
-                || Me.IsDead  
+            if (//DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
+                //|| 
+                Me.IsDead  
                 || Me.IsFlying 
                 || Me.IsGhost
                 ) { return; }
@@ -100,16 +101,17 @@ namespace IWantMovement
                 {
                     Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
                 }
-            }
-            else
-            {
-                if (Me.Mounted && Me.Combat && !Me.IsMoving && Me.GotTarget && Me.CurrentTarget.Distance < 30 && !Me.CurrentTarget.IsFriendly)
+                else
                 {
-                    Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                    if (Me.Mounted && Me.Combat && !Me.IsMoving && Me.GotTarget && Me.CurrentTarget.Distance < 30 &&
+                        !Me.CurrentTarget.IsFriendly)
+                    {
+                        Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                    }
                 }
             }
 
-            if (Me.IsOnTransport || Me.Mounted) { return; }
+            //if (Me.IsOnTransport || Me.Mounted) { return; }
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
             {
@@ -151,7 +153,7 @@ namespace IWantMovement
                 Movement.Move();
             }
 
-            _pluginThrottle = DateTime.UtcNow;
+            //_pluginThrottle = DateTime.UtcNow;
             
 
         }
