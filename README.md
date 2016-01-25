@@ -17,6 +17,6 @@ The idea behind this plugin is to allow manually controlled combat routines (Rou
 
 
 ## Credits and Developers
-Originally created and developed by Millz.
-Continued development by Lbniese.
-Thanks to Chinajade for demonstrating a method of hooking into a combat routine.
+- Originally created and developed by Millz.
+- Continued development by Lbniese.
+- Thanks to Chinajade for demonstrating a method of hooking into a combat routine.
