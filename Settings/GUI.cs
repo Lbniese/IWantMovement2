@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using IWantMovement2.Settings;
 
 namespace IWantMovement.Settings
 {
@@ -37,6 +38,12 @@ namespace IWantMovement.Settings
         {
             MessageBox.Show("There is currently no thread on the forums about this updated version.");
             //Process.Start("https://www.thebuddyforum.com/members/48399-lbniese.html");
+        }
+
+        private void creditsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var credits = new Credits();
+            credits.Show();
         }
 
 

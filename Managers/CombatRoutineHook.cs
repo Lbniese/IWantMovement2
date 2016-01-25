@@ -21,57 +21,55 @@ namespace IWantMovement.Managers
         public delegate WoWPoint LocationRetriever(object context);
 
         #region CR Overrides
-        public override string Name { get { return _undecoratedCR.Name; } }
+        public override string Name { get { return _undecoratedCr.Name; } }
         internal static readonly Version Version = new Version(0, 0, 1);
-        public new string ButtonText { get { return _undecoratedCR.ButtonText; } }
-        public override bool WantButton { get { return _undecoratedCR.WantButton; } }
-        public override void OnButtonPress() { _undecoratedCR.OnButtonPress(); }
+        public new string ButtonText { get { return _undecoratedCr.ButtonText; } }
+        public override bool WantButton { get { return _undecoratedCr.WantButton; } }
+        public override void OnButtonPress() { _undecoratedCr.OnButtonPress(); }
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
 
         public override WoWClass Class { get { return StyxWoW.Me.Class; } }
         public override double? PullDistance { get { return Styx.Helpers.CharacterSettings.Instance.PullDistance; } }
 
-        public override Composite CombatBehavior { get { return _undecoratedCR.CombatBehavior; } }
-        public override Composite CombatBuffBehavior { get { return _undecoratedCR.CombatBuffBehavior; } }
-        public override Composite DeathBehavior { get { return _undecoratedCR.DeathBehavior; } }
-        public override Composite HealBehavior { get { return _undecoratedCR.HealBehavior; } }
-        public override Composite MoveToTargetBehavior { get { return _undecoratedCR.MoveToTargetBehavior; } }
-        public override Composite PreCombatBuffBehavior { get { return _undecoratedCR.PreCombatBuffBehavior; } }
-        public override Composite PullBuffBehavior { get { return _undecoratedCR.PullBuffBehavior; } }
+        public override Composite CombatBehavior { get { return _undecoratedCr.CombatBehavior; } }
+        public override Composite CombatBuffBehavior { get { return _undecoratedCr.CombatBuffBehavior; } }
+        public override Composite DeathBehavior { get { return _undecoratedCr.DeathBehavior; } }
+        public override Composite HealBehavior { get { return _undecoratedCr.HealBehavior; } }
+        public override Composite MoveToTargetBehavior { get { return _undecoratedCr.MoveToTargetBehavior; } }
+        public override Composite PreCombatBuffBehavior { get { return _undecoratedCr.PreCombatBuffBehavior; } }
+        public override Composite PullBuffBehavior { get { return _undecoratedCr.PullBuffBehavior; } }
         public override Composite RestBehavior { get { return Managers.Rest.DefaultRestBehaviour(); } }
         public override Composite PullBehavior { get { return CreatePullBehavior; } }
 
-        public bool NeedDeath { get { return _undecoratedCR.NeedDeath; } }
-        public bool NeedHeal { get { return _undecoratedCR.NeedHeal; } }
-        public bool NeedCombatBuffs { get { return _undecoratedCR.NeedCombatBuffs; } }
-        public bool NeedRest { get { return Me.HealthPercent <= IWMSettings.Instance.EatPercent || (Me.PowerType == WoWPowerType.Mana && Me.ManaPercent <= IWMSettings.Instance.DrinkPercent); } }
-        public bool NeedPullBuffs { get { return _undecoratedCR.NeedPullBuffs; } }
-        public bool NeedPreCombatBuffs { get { return _undecoratedCR.NeedPreCombatBuffs; } }
+        public override bool NeedDeath { get { return _undecoratedCr.NeedDeath; } }
+        public override bool NeedHeal { get { return _undecoratedCr.NeedHeal; } }
+        public override bool NeedCombatBuffs { get { return _undecoratedCr.NeedCombatBuffs; } }
+        public override bool NeedRest { get { return Me.HealthPercent <= IWMSettings.Instance.EatPercent || (Me.PowerType == WoWPowerType.Mana && Me.ManaPercent <= IWMSettings.Instance.DrinkPercent); } }
+        public override bool NeedPullBuffs { get { return _undecoratedCr.NeedPullBuffs; } }
+        public override bool NeedPreCombatBuffs { get { return _undecoratedCr.NeedPreCombatBuffs; } }
 
-        public void Combat() { _undecoratedCR.Combat(); }
-        public void Death() { _undecoratedCR.Death(); }
-        public void Heal() { _undecoratedCR.Heal(); }
-        public void CombatBuff() { _undecoratedCR.CombatBuff(); }
-        public void PreCombatBuff() { _undecoratedCR.PreCombatBuff(); }
-        public void Rest() { IwmRestBehavior(); _undecoratedCR.Rest(); }
-        public void Pulse() { _undecoratedCR.Pulse(); }
-        public void ShutDown() { _undecoratedCR.ShutDown(); }
-        public void PullBuff() { _undecoratedCR.PullBuff(); }
-        public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); }
+        public override void Combat() { _undecoratedCr.Combat(); }
+        public override void Death() { _undecoratedCr.Death(); }
+        public override void Heal() { _undecoratedCr.Heal(); }
+        public override void CombatBuff() { _undecoratedCr.CombatBuff(); }
+        public override void PreCombatBuff() { _undecoratedCr.PreCombatBuff(); }
+        public override void Rest() { IwmRestBehavior(); _undecoratedCr.Rest(); }
+        public override void Pulse() { _undecoratedCr.Pulse(); }
+        public override void ShutDown() { _undecoratedCr.ShutDown(); }
+        public override void PullBuff() { _undecoratedCr.PullBuff(); }
+        public override void Pull() { IwmPullBehavior(); _undecoratedCr.Pull(); }
 
         private Composite IwmPullBehavior() { return CreatePullBehavior; }
         private Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
         #endregion
 
-        readonly CombatRoutine _undecoratedCR;
-        public IWantMovementCR(CombatRoutine undecoratedCR)
+        readonly CombatRoutine _undecoratedCr;
+        public IWantMovementCR(CombatRoutine undecoratedCr)
         {
-            if (undecoratedCR != null)
-            {
-                Log.Info("Storing Combat Routine");
-                _undecoratedCR = undecoratedCR;
-            }
+            if (undecoratedCr == null) return;
+            Log.Info("Storing Combat Routine");
+            _undecoratedCr = undecoratedCr;
         }
 
         public void OnEnable()
@@ -82,10 +80,10 @@ namespace IWantMovement.Managers
         public void OnDisable()
         {
             Log.Warning("Disposing IWM2 Combat Routine Hook");
-            RoutineManager.Current = _undecoratedCR;
+            RoutineManager.Current = _undecoratedCr;
         }
 
-        private Composite CreatePullBehavior
+        private static Composite CreatePullBehavior
         {
             get
             {

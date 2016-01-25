@@ -1,18 +1,18 @@
 using System;
 using System.Windows.Forms;
+using IWantMovement.Helper;
+using IWantMovement.Managers;
+using IWantMovement.Settings;
 using Styx;
 using Styx.CommonBot;
 using Styx.CommonBot.POI;
 using Styx.CommonBot.Routines;
 using Styx.Plugins;
 using Styx.WoWInternals.WoWObjects;
-using IWantMovement.Helper;
-using IWantMovement.Managers;
-using IWantMovement.Settings;
 
-namespace IWantMovement
+namespace IWantMovement2
 {
-    internal class IWantMovement : HBPlugin
+    internal class IWantMovement2 : HBPlugin
     {
 
         private Form _gui;
@@ -22,7 +22,6 @@ namespace IWantMovement
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
-        private DateTime _pluginThrottle;
 
         private static bool _initialized;
 
@@ -45,20 +44,18 @@ namespace IWantMovement
 
         public override void OnEnable()
         {
-            if (!_initialized)
-            {
-                Log.Info("Storing current targeting instance.");
-                _previousTargetMethod = Targeting.Instance;
-                Log.Info("Creating our targeting instance.");
-                _thisTargetMethod = new Target();
+            if (_initialized) return;
+            Log.Info("Storing current targeting instance.");
+            _previousTargetMethod = Targeting.Instance;
+            Log.Info("Creating our targeting instance.");
+            _thisTargetMethod = new Target();
 
-                Log.Info("IWantMovement2 Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-                Log.Info("-- Originally by Millz");
-                Log.Info("~ Continued by Lbniese");
-                _initialized = true;
+            Log.Info("IWantMovement2 Initialized [ {0}]", SvnRevision.Replace("$", ""));
+            Log.Info("-- Originally by Millz");
+            Log.Info("~ Continued by Lbniese");
+            _initialized = true;
 
-                base.OnEnable();
-            }
+            base.OnEnable();
         }
 
         public override void OnDisable()
@@ -120,28 +117,25 @@ namespace IWantMovement
 
             if (Me.GotTarget)
             {
-                // Clear dead targets
                 Target.ClearTarget();
             }
 
-            if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && (Me.Combat || Me.PetInCombat))
+            if (!Settings.EnableMovement || Me.HasAura("Food") || Me.HasAura("Drink") || (!Me.Combat && !Me.PetInCombat))
+                return;
+            if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
             {
-                if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
-                {
-                    Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
-                    Me.CurrentTarget.Face();
-                }
-                Movement.Move();
+                Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.Name, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
+                Me.CurrentTarget.Face();
             }
-
+            Movement.Move();
         }
 
-        public static Styx.CommonBot.Mount.ActionLandAndDismount ActionLandAndDismount()
+        public static Mount.ActionLandAndDismount ActionLandAndDismount()
         {
-          string Reason = "[IWM2] Stuck on mount? Dismounting for combat.";
-          bool Dismount = true;
-          Nullable<WoWPoint> LandPoint = null;
-          return new Styx.CommonBot.Mount.ActionLandAndDismount(Reason, Dismount, LandPoint);
+          var Reason = "[IWM2] Stuck on mount? Dismounting for combat.";
+          var Dismount = true;
+          WoWPoint? landPoint = null;
+          return new Mount.ActionLandAndDismount(Reason, Dismount, landPoint);
         }
 
     }
