@@ -1,15 +1,3 @@
-﻿#region Revision info
-/*
- * $Author$
- * $Date$
- * $ID: $
- * $Revision$
- * $URL$
- * $LastChangedBy$
- * $ChangesMade: $
- */
-#endregion
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,13 +18,13 @@ namespace IWantMovement.Managers
 
         private static bool WantTarget()
         {
-            return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime)) 
+            return (DateTime.UtcNow > _targetLast.AddMilliseconds(Settings.IWMSettings.Instance.TargetingThrottleTime))
                 && (!Me.GotTarget || Me.CurrentTarget.IsDead)
-                && !Me.Stunned 
-                && !Me.Rooted 
-                && !Me.HasAnyAura("Food", "Drink") 
-                && !Me.IsDead 
-                && !Me.IsFlying 
+                && !Me.Stunned
+                && !Me.Rooted
+                && !Me.HasAnyAura("Food", "Drink")
+                && !Me.IsDead
+                && !Me.IsFlying
                 && !Me.IsOnTransport
                 ;
         }
@@ -44,28 +32,25 @@ namespace IWantMovement.Managers
 
         public static void AquireTarget()
         {
-            //Log.Debug("[Want A Target:{0}]", WantTarget());
             if (!WantTarget()) return;
-            
+
             WoWUnit unit;
             _targetLast = DateTime.UtcNow;
             if (Map.IsBattleground || Map.IsArena)
             {
-                
+
                 if (Me.Combat || (Me.GotAlivePet && Me.Pet.Combat))
                 {
-                    // get a pvp unit attacking me
                     unit = NearbyAttackableUnitsAttackingMe(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.Attackable);
-                    if (unit != null) 
+                    if (unit != null)
                     {
                         unit.Target();
                         Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                         return;
                     }
-                    
+
                 }
 
-                // return closest pvp unit
                 unit = NearbyAttackableUnits(Me.Location, 40).FirstOrDefault(u => u != null && u.IsPlayer && u.IsHostile && u.InLineOfSpellSight && u.Attackable);
                 if (unit != null)
                 {
@@ -73,7 +58,7 @@ namespace IWantMovement.Managers
                     Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                     return;
                 }
-                
+
 
             }
 
@@ -81,7 +66,6 @@ namespace IWantMovement.Managers
             {
                 if (Me.Combat || (Me.GotAlivePet && Me.Pet.Combat))
                 {
-                    // get unit attacking party
                     unit = NearbyAttackableUnitsAttackingUs(Me.Location, 40).FirstOrDefault(u => u != null && u.IsHostile && u.InLineOfSpellSight && u.Attackable);
                     if (unit != null)
                     {
@@ -89,7 +73,7 @@ namespace IWantMovement.Managers
                         Helper.Log.Info("[Targetting: {0}] [Target HP: {1}] [Target Distance: {2}]", unit.SafeName, unit.HealthPercent, unit.Distance);
                         return;
                     }
-                    
+
                 }
 
             }
@@ -104,9 +88,9 @@ namespace IWantMovement.Managers
 
         public static void ClearTarget()
         {
-            if (Me.CurrentTarget == null) { return; } 
-            
-            if (Me.CurrentTarget.IsDead && !Me.CurrentTarget.HasAura("Feign Death") && !Me.Looting && BotPoi.Current.Type != PoiType.Loot) 
+            if (Me.CurrentTarget == null) { return; }
+
+            if (Me.CurrentTarget.IsDead && !Me.CurrentTarget.HasAura("Feign Death") && !Me.Looting && BotPoi.Current.Type != PoiType.Loot)
             {
                 Helper.Log.Info("[Clearing {0}] [Reason: Dead]", Me.CurrentTarget.SafeName);
                 Me.ClearTarget();

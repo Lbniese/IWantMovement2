@@ -1,15 +1,3 @@
-﻿#region Revision info
-/*
- * $Author: millz $
- * $Date: 2013-04-27 09:32:20 +0100 (Sat, 27 Apr 2013) $
- * $ID: $
- * $Revision: 23 $
- * $URL: https://subversion.assembla.com/svn/iwantmovement/trunk/IWantMovement/Managers/Rest.cs $
- * $LastChangedBy: millz $
- * $ChangesMade: $
- */
-#endregion
-
 using System;
 using CommonBehaviors.Actions;
 using IWantMovement.Helper;
@@ -23,12 +11,10 @@ using Styx.WoWInternals.WoWObjects;
 using Action = Styx.TreeSharp.Action;
 
 /*
- * 
+ *
  * A lot of code in here was taken from CLU's Movement.cs with permission from Wulf.
  * Big credits/thanks go to the CLU/PureRotation team (past and present) for code in here.
- * 
- * -- Millz
- * 
+ *
  */
 
 namespace IWantMovement.Managers

@@ -1,23 +1,8 @@
-﻿#region Revision info
 /*
- * $Author$
- * $Date$
- * $ID: $
- * $Revision$
- * $URL$
- * $LastChangedBy$
- * $ChangesMade: $
- */
-#endregion
-
-
-/*
- * 
+ *
  * A lot of code in here was taken from CLU's Movement.cs with permission from Wulf.
  * Big credits/thanks go to the CLU/PureRotation team (past and present) for code in here.
- * 
- * -- Millz
- * 
+ *
  */
 using System;
 using System.Collections.Generic;
@@ -37,14 +22,8 @@ namespace IWantMovement.Managers
     {
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
-        //private static int MaxDistance { get { return Settings.IWMSettings.Instance.MaxDistance; } }
-        //private static int StopDistance { get { return Settings.IWMSettings.Instance.StopDistance; } }
-        //public static bool ValidatedSettings = false;
-        //private static bool _displayWarning = false;
         private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
-        //public delegate WoWPoint LocationRetriever(object context);
-        //public delegate float DynamicRangeRetriever(object context);
         private static float StopDistance { get { return Me.IsMelee() ? 1f : 33f; } }
         private static float MaxDistance { get { return Me.IsMelee() ? MeleeRange : 35f; } }
         private static DateTime _movementSuspendedTime;
@@ -52,20 +31,20 @@ namespace IWantMovement.Managers
 
         private static bool CanMove()
         {
-            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime)) 
-                && !Me.Stunned 
-                && !Me.Rooted 
-                && !Me.HasAnyAura("Food", "Drink") 
-                && !Me.IsDead 
-                && !Me.IsFlying 
+            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime))
+                && !Me.Stunned
+                && !Me.Rooted
+                && !Me.HasAnyAura("Food", "Drink")
+                && !Me.IsDead
+                && !Me.IsFlying
                 && !Me.IsOnTransport
-                && Me.CurrentTarget != null 
+                && Me.CurrentTarget != null
                 && !Me.CurrentTarget.IsDead;
         }
 
         private static bool NeedToMove()
         {
-            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance || !Me.CurrentTarget.InLineOfSpellSight)   /* && !Me.IsMoving*/;
+            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance || !Me.CurrentTarget.InLineOfSpellSight);
         }
 
         private static bool NeedToStop()
@@ -89,10 +68,10 @@ namespace IWantMovement.Managers
 
         private static bool UserIsMoving()
         {
-            return  IsKeyDown(Keys.A) || 
-                    IsKeyDown(Keys.S) || 
-                    IsKeyDown(Keys.D) || 
-                    IsKeyDown(Keys.W) || 
+            return  IsKeyDown(Keys.A) ||
+                    IsKeyDown(Keys.S) ||
+                    IsKeyDown(Keys.D) ||
+                    IsKeyDown(Keys.W) ||
                     IsKeyDown(Keys.Q) ||
                     IsKeyDown(Keys.E) ||
                     IsKeyDown(Keys.Up) ||
@@ -106,7 +85,7 @@ namespace IWantMovement.Managers
 
         private static void SuspendMovement()
         {
-            if (!Settings.IWMSettings.Instance.AllowSuspendMovement) {return;}
+            if (!Settings.IWMSettings.Instance.AllowSuspendMovement) { return; }
 
             if (UserIsMoving())
             {
@@ -117,7 +96,7 @@ namespace IWantMovement.Managers
                 _movementSuspended = true;
                 _movementSuspendedTime = DateTime.UtcNow;
             }
-            
+
             if (_movementSuspended && !UserIsMoving() && DateTime.UtcNow > _movementSuspendedTime.AddMilliseconds(Settings.IWMSettings.Instance.SuspendDuration))
             {
                 if (_movementSuspended)
@@ -132,7 +111,7 @@ namespace IWantMovement.Managers
 
         public static void Move()
         {
-            
+
             // Check we don't have bad settings
             //ValidateSettings();
 
@@ -260,7 +239,7 @@ namespace IWantMovement.Managers
                      ? 999999f
                      : Math.Round(DistanceToTargetBoundingBox(Me.CurrentTarget), 0));
         }
-        
+
         public static float DistanceToTargetBoundingBox(WoWUnit target)
         {
             if (target != null)
@@ -269,7 +248,7 @@ namespace IWantMovement.Managers
             }
             return 99999;
         }
-        
+
         public static bool PlayerIsChanneling
         {
             get { return StyxWoW.Me.ChanneledCastingSpellId != 0; }

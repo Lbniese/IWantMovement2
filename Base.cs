@@ -1,15 +1,3 @@
-﻿#region Revision info
-/*
- * $Author$
- * $Date$
- * $ID: $
- * $Revision$
- * $URL$
- * $LastChangedBy$
- * $ChangesMade: $
- */
-#endregion
-
 using System;
 using System.Windows.Forms;
 using Styx;
@@ -24,31 +12,29 @@ using IWantMovement.Settings;
 
 namespace IWantMovement
 {
-// ReSharper disable InconsistentNaming
     internal class IWantMovement : HBPlugin
-// ReSharper restore InconsistentNaming
     {
-        private Form _gui; 
+
+        private Form _gui;
         Targeting _previousTargetMethod;
         Targeting _thisTargetMethod;
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
         private static string SvnRevision { get { return "$Rev$"; } }
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
-        //private DateTime _facingLast;
         private DateTime _pluginThrottle;
-         
+
         private static bool _initialized;
 
-        private ICombatRoutine _decoratedCombatRoutine;
-        private ICombatRoutine _undecoratedCombatRoutine;
+        private CombatRoutine _decoratedCombatRoutine;
+        private CombatRoutine _undecoratedCombatRoutine;
 
         #region Default Overrides
-        public override string Author { get { return "Millz"; }}
-        public override string ButtonText { get { return "Settings"; }}
-        public override string Name { get { return "I Want Movement"; }}
+        public override string Author { get { return "Lbniese"; } }
+        public override string ButtonText { get { return "Settings"; } }
+        public override string Name { get { return "I Want Movement 2"; } }
         public override bool WantButton { get { return true; }}
-        public override Version Version { get { return new Version(0,0,1); }}
+        public override Version Version { get { return new Version(0, 0, 1); } }
         #endregion Default Overrides
 
         public override void OnButtonPress()
@@ -57,61 +43,56 @@ namespace IWantMovement
             if (_gui != null || _gui.IsDisposed) _gui.ShowDialog();
         }
 
-        public override void Initialize()
+        public override void OnEnable()
         {
-            if (!_initialized) // prevent init twice. 
+            if (!_initialized)
             {
                 Log.Info("Storing current targeting instance.");
                 _previousTargetMethod = Targeting.Instance;
                 Log.Info("Creating our targeting instance.");
                 _thisTargetMethod = new Target();
 
-                Log.Info("IWantMovement Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
-                Log.Info("-- Millz");
+                Log.Info("IWantMovement2 Initialized [ {0}]", SvnRevision.Replace("$", "")); // Will print as [ Rev: 1 ]
+                Log.Info("-- Originally by Millz");
+                Log.Info("~ Continued by Lbniese");
                 _initialized = true;
-           
-                base.Initialize();
+
+                base.OnEnable();
             }
         }
 
-        public override void Dispose()
+        public override void OnDisable()
         {
-            Log.Info("Removing IWantMovement Hooks");
+            Log.Info("Removing IWantMovement2 Hooks");
             Targeting.Instance = _previousTargetMethod;
             RoutineManager.Current = _undecoratedCombatRoutine;
-            Log.Info("Disabled IWantMovement");
-            base.Dispose(); 
+            Log.Info("Disabled IWantMovement2");
+            base.OnDisable();
         }
-        
-        public override void Pulse() 
+
+        public override void Pulse()
         {
-            if (//DateTime.UtcNow < _pluginThrottle.AddMilliseconds(200) 
-                //|| 
-                Me.IsDead  
-                || Me.IsFlying 
-                || Me.IsGhost
-                ) { return; }
+            if (Me.IsDead || Me.IsFlying || Me.IsGhost) { return; }
 
             if (Settings.EnableAutoDismount && BotManager.Current.Name != "Questing")
             {
                 if (Me.Mounted &&
-                    ( /*(Me.Combat && !Me.IsMoving) ||*/
-                        (BotPoi.Current.Type == PoiType.Kill && BotPoi.Current.AsObject.Distance < 30) ||
+                    ((BotPoi.Current.Type == PoiType.Kill && BotPoi.Current.AsObject.Distance < 30) ||
                         (Me.GotTarget && Me.CurrentTarget.Distance < 30 && !Me.CurrentTarget.IsFriendly)))
                 {
-                    Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                    ActionLandAndDismount();
                 }
                 else
                 {
                     if (Me.Mounted && Me.Combat && !Me.IsMoving && Me.GotTarget && Me.CurrentTarget.Distance < 30 &&
                         !Me.CurrentTarget.IsFriendly)
                     {
-                        Mount.Dismount("[IWM] Stuck on mount? Dismounting for combat.");
+                        ActionLandAndDismount();
                     }
                 }
             }
 
-            //if (Me.IsOnTransport || Me.Mounted) { return; }
+            if (Me.IsOnTransport || Me.Mounted) { return; }
 
             if ((RoutineManager.Current != null) && (RoutineManager.Current != _decoratedCombatRoutine))
             {
@@ -121,7 +102,7 @@ namespace IWantMovement
                 RoutineManager.Current = _decoratedCombatRoutine;
                 Log.Info("Combat Routine Hook Installed!");
             }
-            
+
             if ((_thisTargetMethod != Targeting.Instance) && Settings.EnableTargeting && !Me.HasAura("Food") && !Me.HasAura("Drink"))
             {
                 Log.Warning("Taking control of targeting. If this message is being spammed, something else is trying to take control.");
@@ -134,15 +115,15 @@ namespace IWantMovement
                 {
                     Target.AquireTarget();
                 }
-                
+
             }
 
             if (Me.GotTarget)
             {
                 // Clear dead targets
                 Target.ClearTarget();
-            } 
-             
+            }
+
             if (Settings.EnableMovement && !Me.HasAura("Food") && !Me.HasAura("Drink") && (Me.Combat || Me.PetInCombat))
             {
                 if (Settings.EnableFacing && Me.CurrentTarget != null && !Me.CurrentTarget.IsDead && !Me.IsMoving && !Me.IsSafelyFacing(Me.CurrentTarget) && Me.CurrentTarget.Distance <= 50)
@@ -153,9 +134,14 @@ namespace IWantMovement
                 Movement.Move();
             }
 
-            //_pluginThrottle = DateTime.UtcNow;
-            
+        }
 
+        public static Styx.CommonBot.Mount.ActionLandAndDismount ActionLandAndDismount()
+        {
+          string Reason = "[IWM2] Stuck on mount? Dismounting for combat.";
+          bool Dismount = true;
+          Nullable<WoWPoint> LandPoint = null;
+          return new Styx.CommonBot.Mount.ActionLandAndDismount(Reason, Dismount, LandPoint);
         }
 
     }

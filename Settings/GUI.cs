@@ -1,15 +1,3 @@
-﻿#region Revision info
-/*
- * $Author$
- * $Date$
- * $ID: $
- * $Revision$
- * $URL$
- * $LastChangedBy$
- * $ChangesMade: $
- */
-#endregion
-
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
@@ -32,7 +20,6 @@ namespace IWantMovement.Settings
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
             IWMSettings.Instance.Save();
-            //Managers.Movement.ValidatedSettings = false;
         }
 
         private void pgSettings_Click(object sender, EventArgs e)
@@ -43,12 +30,13 @@ namespace IWantMovement.Settings
         private void donateToolStripMenuItem_Click(object sender, EventArgs e)
         {
             MessageBox.Show("Thanks! All donations are greatly appreciated.");
-            Process.Start("http://bit.ly/YEb4SU");
+            Process.Start("http://bit.ly/1nu7Hip");
         }
 
         private void reportAnIssueToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Process.Start("http://www.thebuddyforum.com/honorbuddy-forum/plugins/movement/116958-plugin-i-want-movement-use-lazyraider-crs-afk-bot-bases.html");
+            MessageBox.Show("There is currently no thread on the forums about this updated version.");
+            //Process.Start("https://www.thebuddyforum.com/members/48399-lbniese.html");
         }
 
 

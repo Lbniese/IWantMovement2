@@ -1,15 +1,3 @@
-﻿#region Revision info
-/*
- * $Author: millz $
- * $Date: 2013-04-26 12:18:24 +0100 (Fri, 26 Apr 2013) $
- * $ID: $
- * $Revision: 16 $
- * $URL: https://subversion.assembla.com/svn/iwantmovement/trunk/IWantMovement/Managers/Target.cs $
- * $LastChangedBy: millz $
- * $ChangesMade: $
- */
-#endregion
-
 using System;
 using CommonBehaviors.Actions;
 using IWantMovement.Helper;
@@ -23,12 +11,9 @@ using Action = Styx.TreeSharp.Action;
 
 namespace IWantMovement.Managers
 {
-// ReSharper disable InconsistentNaming
-    public class IWantMovementCR : ICombatRoutine
-// ReSharper restore InconsistentNaming
+    public class IWantMovementCR : CombatRoutine
     {
-        
-        //internal static bool EnablePullSpells = true;
+
         private static IWMSettings Settings { get { return IWMSettings.Instance; } }
 
         private delegate T Selection<out T>(object context);
@@ -36,26 +21,26 @@ namespace IWantMovement.Managers
         public delegate WoWPoint LocationRetriever(object context);
 
         #region CR Overrides
-        public string Name { get { return _undecoratedCR.Name; } }
+        public override string Name { get { return _undecoratedCR.Name; } }
         internal static readonly Version Version = new Version(0, 0, 1);
-        public string ButtonText { get { return _undecoratedCR.ButtonText; } }
-        public bool WantButton { get { return _undecoratedCR.WantButton; } }
-        public void OnButtonPress() { _undecoratedCR.OnButtonPress(); }
+        public new string ButtonText { get { return _undecoratedCR.ButtonText; } }
+        public override bool WantButton { get { return _undecoratedCR.WantButton; } }
+        public override void OnButtonPress() { _undecoratedCR.OnButtonPress(); }
 
         private static LocalPlayer Me { get { return StyxWoW.Me; } }
 
-        public WoWClass Class { get { return StyxWoW.Me.Class; } }
-        public double? PullDistance { get { return Styx.Helpers.CharacterSettings.Instance.PullDistance; } }
-        
-        public Composite CombatBehavior { get { return _undecoratedCR.CombatBehavior; } }
-        public Composite CombatBuffBehavior { get { return _undecoratedCR.CombatBuffBehavior; } }
-        public Composite DeathBehavior { get { return _undecoratedCR.DeathBehavior; } }
-        public Composite HealBehavior { get { return _undecoratedCR.HealBehavior; } }
-        public Composite MoveToTargetBehavior { get { return _undecoratedCR.MoveToTargetBehavior; } }
-        public Composite PreCombatBuffBehavior { get { return _undecoratedCR.PreCombatBuffBehavior; } }
-        public Composite PullBuffBehavior { get { return _undecoratedCR.PullBuffBehavior; } }
-        public Composite RestBehavior { get { return Managers.Rest.DefaultRestBehaviour(); }} // Hook into rest behavior
-        public Composite PullBehavior { get { return CreatePullBehavior; } } // Hook into Pull Behavior
+        public override WoWClass Class { get { return StyxWoW.Me.Class; } }
+        public override double? PullDistance { get { return Styx.Helpers.CharacterSettings.Instance.PullDistance; } }
+
+        public override Composite CombatBehavior { get { return _undecoratedCR.CombatBehavior; } }
+        public override Composite CombatBuffBehavior { get { return _undecoratedCR.CombatBuffBehavior; } }
+        public override Composite DeathBehavior { get { return _undecoratedCR.DeathBehavior; } }
+        public override Composite HealBehavior { get { return _undecoratedCR.HealBehavior; } }
+        public override Composite MoveToTargetBehavior { get { return _undecoratedCR.MoveToTargetBehavior; } }
+        public override Composite PreCombatBuffBehavior { get { return _undecoratedCR.PreCombatBuffBehavior; } }
+        public override Composite PullBuffBehavior { get { return _undecoratedCR.PullBuffBehavior; } }
+        public override Composite RestBehavior { get { return Managers.Rest.DefaultRestBehaviour(); } }
+        public override Composite PullBehavior { get { return CreatePullBehavior; } }
 
         public bool NeedDeath { get { return _undecoratedCR.NeedDeath; } }
         public bool NeedHeal { get { return _undecoratedCR.NeedHeal; } }
@@ -69,38 +54,34 @@ namespace IWantMovement.Managers
         public void Heal() { _undecoratedCR.Heal(); }
         public void CombatBuff() { _undecoratedCR.CombatBuff(); }
         public void PreCombatBuff() { _undecoratedCR.PreCombatBuff(); }
-        public void Rest() { IwmRestBehavior(); _undecoratedCR.Rest(); } // Hook into rest behavior
+        public void Rest() { IwmRestBehavior(); _undecoratedCR.Rest(); }
         public void Pulse() { _undecoratedCR.Pulse(); }
         public void ShutDown() { _undecoratedCR.ShutDown(); }
         public void PullBuff() { _undecoratedCR.PullBuff(); }
-        public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); } // Hook into pull behavior
+        public void Pull() { IwmPullBehavior(); _undecoratedCR.Pull(); }
 
         private Composite IwmPullBehavior() { return CreatePullBehavior; }
         private Composite IwmRestBehavior() { return Managers.Rest.DefaultRestBehaviour(); }
         #endregion
 
-        readonly ICombatRoutine _undecoratedCR;
-        public IWantMovementCR(ICombatRoutine undecoratedCR)
-
+        readonly CombatRoutine _undecoratedCR;
+        public IWantMovementCR(CombatRoutine undecoratedCR)
         {
             if (undecoratedCR != null)
             {
                 Log.Info("Storing Combat Routine");
                 _undecoratedCR = undecoratedCR;
             }
-            //{
-            //    Log.Warning("Current Combat Routine is null - Override behavior may not work correctly.");
-            //}
-        }
-        
-        public void Initialize()
-        {
-            
         }
 
-        public void Dispose()
+        public void OnEnable()
         {
-            Log.Warning("Disposing IWM Combat Routine Hook");
+
+        }
+
+        public void OnDisable()
+        {
+            Log.Warning("Disposing IWM2 Combat Routine Hook");
             RoutineManager.Current = _undecoratedCR;
         }
 
@@ -115,8 +96,8 @@ namespace IWantMovement.Managers
                     Log.Info("[Facing: {0}] [Target HP: {1}] [Target Distance: {2}]", Me.CurrentTarget.SafeName, Me.CurrentTarget.HealthPercent, Me.CurrentTarget.Distance);
                     Me.CurrentTarget.Face();
                 }
-                
-                
+
+
                 if (StyxWoW.Me.CurrentTarget != null && !Me.IsCasting && !Me.IsChanneling) { Log.Info("[Pulling] [Attacking: {0}]", StyxWoW.Me.CurrentTarget.SafeName); }
 
                 if (!Me.HasAura(Settings.PullSpell1))
@@ -134,9 +115,7 @@ namespace IWantMovement.Managers
                     Cast(Settings.PullSpell3);
                 }
 
-                //RoutineManager.Current.Combat();
-
-                return 
+                return
                     new PrioritySelector();
 
             }
