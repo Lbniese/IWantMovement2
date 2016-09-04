@@ -4,88 +4,72 @@
  * Big credits/thanks go to the CLU/PureRotation team (past and present) for code in here.
  *
  */
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using IWantMovement.Helper;
+using IWantMovement2.Helper;
+using IWantMovement2.Settings;
 using Styx;
+using Styx.Common;
 using Styx.Helpers;
 using Styx.Pathing;
-using Styx.WoWInternals.WoWObjects;
 using Styx.WoWInternals;
+using Styx.WoWInternals.WoWObjects;
 
-namespace IWantMovement.Managers
+namespace IWantMovement2.Managers
 {
     public static class Movement
     {
-
-        private static LocalPlayer Me { get { return StyxWoW.Me; } }
-        private static bool MoveBehindTarget { get { return Settings.IWMSettings.Instance.MoveBehindTarget; } }
         private static DateTime _movementLast;
-        private static float StopDistance { get { return Me.IsMelee() ? 1f : 33f; } }
-        private static float MaxDistance { get { return Me.IsMelee() ? MeleeRange : 35f; } }
         private static DateTime _movementSuspendedTime;
         private static bool _movementSuspended;
 
+        private static LocalPlayer Me => StyxWoW.Me;
+        private static bool MoveBehindTarget => IwmSettings.Instance.MoveBehindTarget;
+        private static float StopDistance => Me.IsMelee() ? 1f : 33f;
+        private static float MaxDistance => Me.IsMelee() ? MeleeRange : 35f;
+
         private static bool CanMove()
         {
-            return (DateTime.UtcNow > _movementLast.AddMilliseconds(Settings.IWMSettings.Instance.MovementThrottleTime))
-                && !Me.Stunned
-                && !Me.Rooted
-                && !Me.HasAnyAura("Food", "Drink")
-                && !Me.IsDead
-                && !Me.IsFlying
-                && !Me.IsOnTransport
-                && Me.CurrentTarget != null
-                && !Me.CurrentTarget.IsDead;
+            return (DateTime.UtcNow > _movementLast.AddMilliseconds(IwmSettings.Instance.MovementThrottleTime))
+                   && !Me.Stunned
+                   && !Me.Rooted
+                   && !Me.HasAnyAura("Food", "Drink")
+                   && !Me.IsDead
+                   && !Me.IsFlying
+                   && !Me.IsOnTransport
+                   && Me.CurrentTarget != null
+                   && !Me.CurrentTarget.IsDead;
         }
 
         private static bool NeedToMove()
         {
-            return Me.CurrentTarget != null && (Me.CurrentTarget.Distance > MaxDistance || !Me.CurrentTarget.InLineOfSpellSight);
+            return Me.CurrentTarget != null &&
+                   (Me.CurrentTarget.Distance > MaxDistance || !Me.CurrentTarget.InLineOfSpellSight);
         }
 
         private static bool NeedToStop()
         {
-           if (Me.CurrentTarget != null && (!Me.IsMelee() && (Me.CurrentTarget.Distance <= StopDistance && Me.CurrentTarget.InLineOfSpellSight) || Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
-           {
-               return true;
-           }
+            if (Me.CurrentTarget != null &&
+                (!Me.IsMelee() && Me.CurrentTarget.Distance <= StopDistance && Me.CurrentTarget.InLineOfSpellSight ||
+                 Me.CurrentTarget.Distance <= 1.5 || Me.IsMelee() && Me.CurrentTarget.IsWithinMeleeRange) && Me.IsMoving)
+            {
+                return true;
+            }
 
             return false;
         }
 
-        #region Key States
-        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
-        private static extern short GetAsyncKeyState(int vkey);
-
-        static bool IsKeyDown(Keys key)
-        {
-            return (GetAsyncKeyState((int)key) & 0x8000) != 0;
-        }
-
-        private static bool UserIsMoving()
-        {
-            return  IsKeyDown(Keys.A) ||
-                    IsKeyDown(Keys.S) ||
-                    IsKeyDown(Keys.D) ||
-                    IsKeyDown(Keys.W) ||
-                    IsKeyDown(Keys.Q) ||
-                    IsKeyDown(Keys.E) ||
-                    IsKeyDown(Keys.Up) ||
-                    IsKeyDown(Keys.Down) ||
-                    IsKeyDown(Keys.Left) ||
-                    IsKeyDown(Keys.Right)
-                    ;
-        }
-
-        #endregion
-
         private static void SuspendMovement()
         {
-            if (!Settings.IWMSettings.Instance.AllowSuspendMovement) { return; }
+            if (!IwmSettings.Instance.AllowSuspendMovement)
+            {
+                return;
+            }
 
             if (UserIsMoving())
             {
@@ -97,21 +81,19 @@ namespace IWantMovement.Managers
                 _movementSuspendedTime = DateTime.UtcNow;
             }
 
-            if (_movementSuspended && !UserIsMoving() && DateTime.UtcNow > _movementSuspendedTime.AddMilliseconds(Settings.IWMSettings.Instance.SuspendDuration))
+            if (_movementSuspended && !UserIsMoving() &&
+                DateTime.UtcNow > _movementSuspendedTime.AddMilliseconds(IwmSettings.Instance.SuspendDuration))
             {
                 if (_movementSuspended)
                 {
                     Log.Info("Taking control of movement");
                 }
                 _movementSuspended = false;
-
             }
-
         }
 
         public static void Move()
         {
-
             // Check we don't have bad settings
             //ValidateSettings();
 
@@ -142,6 +124,32 @@ namespace IWantMovement.Managers
             }
         }
 
+        #region Key States
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, ExactSpelling = true)]
+        private static extern short GetAsyncKeyState(int vkey);
+
+        private static bool IsKeyDown(Keys key)
+        {
+            return (GetAsyncKeyState((int) key) & 0x8000) != 0;
+        }
+
+        private static bool UserIsMoving()
+        {
+            return IsKeyDown(Keys.A) ||
+                   IsKeyDown(Keys.S) ||
+                   IsKeyDown(Keys.D) ||
+                   IsKeyDown(Keys.W) ||
+                   IsKeyDown(Keys.Q) ||
+                   IsKeyDown(Keys.E) ||
+                   IsKeyDown(Keys.Up) ||
+                   IsKeyDown(Keys.Down) ||
+                   IsKeyDown(Keys.Left) ||
+                   IsKeyDown(Keys.Right)
+                ;
+        }
+
+        #endregion
 
         #region Extentions
 
@@ -204,7 +212,8 @@ namespace IWantMovement.Managers
         #endregion
 
         #region Calculations
-        private static WoWPoint PointBehindTarget()
+
+        private static Vector3 PointBehindTarget()
         {
             return
                 StyxWoW.Me.CurrentTarget.Location.RayCast(
@@ -254,7 +263,7 @@ namespace IWantMovement.Managers
             get { return StyxWoW.Me.ChanneledCastingSpellId != 0; }
         }
         */
-        #endregion
 
+        #endregion
     }
 }

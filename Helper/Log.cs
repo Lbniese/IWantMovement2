@@ -1,11 +1,10 @@
 using System.Windows.Media;
 using Styx.Common;
 
-namespace IWantMovement.Helper
+namespace IWantMovement2.Helper
 {
-    static class Log
+    internal static class Log
     {
-
         public static void Info(string logText, params object[] args)
         {
             if (logText == null) return;

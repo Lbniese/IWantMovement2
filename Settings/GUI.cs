@@ -1,31 +1,29 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using IWantMovement2.Settings;
 
-namespace IWantMovement.Settings
+namespace IWantMovement2.Settings
 {
-    public partial class GUI : Form
+    public partial class Gui : Form
     {
-        public GUI()
+        public Gui()
         {
             InitializeComponent();
         }
 
         private void GUI_Load(object sender, EventArgs e)
         {
-            pgSettings.SelectedObject = IWMSettings.Instance;
-            IWMSettings.Instance.Load();
+            pgSettings.SelectedObject = IwmSettings.Instance;
+            IwmSettings.Instance.Load();
         }
 
         private void GUI_FormClosing(object sender, FormClosingEventArgs e)
         {
-            IWMSettings.Instance.Save();
+            IwmSettings.Instance.Save();
         }
 
         private void pgSettings_Click(object sender, EventArgs e)
         {
-
         }
 
         private void donateToolStripMenuItem_Click(object sender, EventArgs e)
@@ -45,7 +43,5 @@ namespace IWantMovement.Settings
             var credits = new Credits();
             credits.Show();
         }
-
-
     }
 }

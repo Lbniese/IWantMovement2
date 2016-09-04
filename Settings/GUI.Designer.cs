@@ -1,6 +1,6 @@
-﻿namespace IWantMovement.Settings
+﻿namespace IWantMovement2.Settings
 {
-    partial class GUI
+    partial class Gui
     {
         /// <summary>
         /// Required designer variable.
@@ -90,7 +90,7 @@
             this.Controls.Add(this.menuStrip1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MainMenuStrip = this.menuStrip1;
-            this.Name = "GUI";
+            this.Name = "Gui";
             this.Text = "I Want Movement 2";
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.GUI_FormClosing);
             this.Load += new System.EventHandler(this.GUI_Load);

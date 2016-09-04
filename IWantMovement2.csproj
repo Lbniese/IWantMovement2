@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <NoStandardLibraries>false</NoStandardLibraries>
     <AssemblyName>IWantMovement2</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -35,11 +35,13 @@
     <RootNamespace>IWantMovement2</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="GreyMagic">
-      <HintPath>..\..\..\Downloads\Honorbuddy 2.5.14780.810\GreyMagic.dll</HintPath>
+    <Reference Include="GreyMagic, Version=2.5.14790.811, Culture=neutral, PublicKeyToken=260525fa2b0e778a, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Downloads\HonorbuddyNightly 3.0.16000.2422\GreyMagic.dll</HintPath>
     </Reference>
-    <Reference Include="Honorbuddy">
-      <HintPath>..\..\..\Downloads\Honorbuddy 2.5.14780.810\Honorbuddy.exe</HintPath>
+    <Reference Include="Honorbuddy, Version=2.5.14790.811, Culture=neutral, PublicKeyToken=50a565ab5c01ae50, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\Downloads\HonorbuddyNightly 3.0.16000.2422\Honorbuddy.exe</HintPath>
     </Reference>
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="PresentationCore" />
@@ -48,12 +50,10 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />
-    <Reference Include="Tripper.Tools">
-      <HintPath>..\..\..\Downloads\Honorbuddy 2.5.14780.810\Tripper.Tools.dll</HintPath>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Base.cs" />

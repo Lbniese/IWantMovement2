@@ -4,33 +4,38 @@ using Styx.Common;
 using Styx.Helpers;
 using Styx.WoWInternals.WoWObjects;
 
-namespace IWantMovement.Settings
+namespace IWantMovement2.Settings
 {
-    internal class IWMSettings : Styx.Helpers.Settings
+    internal class IwmSettings : Styx.Helpers.Settings
     {
-        private static IWMSettings _instance;
-        private static LocalPlayer Me { get { return StyxWoW.Me; } }
+        private static IwmSettings _instance;
 
-        private IWMSettings()
+        private IwmSettings()
             : base(SettingsPath + ".config")
         {
         }
 
-        public static IWMSettings Instance
-        {
-            get { return _instance ?? (_instance = new IWMSettings()); }
-        }
+        private static LocalPlayer Me => StyxWoW.Me;
 
-        private static new string SettingsPath
-        {
-            get
-            {
-                return string.Format("{0}\\Settings\\IWantMovement2\\Settings_{1}_2", Utilities.AssemblyDirectory,
-                                     Me.Name);
-            }
-        }
+        public static IwmSettings Instance => _instance ?? (_instance = new IwmSettings());
+
+        private new static string SettingsPath
+            => string.Format("{0}\\Settings\\IWantMovement2\\Settings_{1}_2", Utilities.AssemblyDirectory,
+                Me.Name);
+
+        #region Facing
+
+        [Setting]
+        [Styx.Helpers.DefaultValue(false)]
+        [Category("- Facing")]
+        [DisplayName("Enable Facing")]
+        [Description("Allow IWM to handle facing target")]
+        public bool EnableFacing { get; set; }
+
+        #endregion Facing
 
         #region Movement
+
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
         [Category("- Movement")]
@@ -70,17 +75,8 @@ namespace IWantMovement.Settings
 
         #endregion Movement
 
-        #region Facing
-        [Setting]
-        [Styx.Helpers.DefaultValue(false)]
-        [Category("- Facing")]
-        [DisplayName("Enable Facing")]
-        [Description("Allow IWM to handle facing target")]
-        public bool EnableFacing { get; set; }
-
-        #endregion Facing
-
         #region Targeting
+
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
         [Category("- Targeting")]
@@ -92,7 +88,9 @@ namespace IWantMovement.Settings
         [Styx.Helpers.DefaultValue(true)]
         [Category("- Targeting")]
         [DisplayName("Clear target when combat with other unit")]
-        [Description("Will clear the target if we're in combat, but the unit we're in combat with isn't targeting us or a member of our group.")]
+        [Description(
+            "Will clear the target if we're in combat, but the unit we're in combat with isn't targeting us or a member of our group."
+            )]
         public bool ClearTargetIfNotTargetingGroup { get; set; }
 
         [Setting]
@@ -101,9 +99,11 @@ namespace IWantMovement.Settings
         [DisplayName("Throttle Time")]
         [Description("Duration in milliseconds to wait between re-attempting action.")]
         public int TargetingThrottleTime { get; set; }
+
         #endregion
 
         #region Rest
+
         [Setting]
         [Styx.Helpers.DefaultValue(false)]
         [Category("- Rest")]
@@ -151,7 +151,6 @@ namespace IWantMovement.Settings
         [DisplayName("Pull Ability 3")]
         [Description("The spell name to cast to force us to get in combat (which will trigger the combat routine).")]
         public string PullSpell3 { get; set; }
-
 
         #endregion
     }
